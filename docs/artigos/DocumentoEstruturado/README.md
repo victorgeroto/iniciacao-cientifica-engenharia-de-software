@@ -119,13 +119,6 @@ README.md             → Este arquivo
 10. TU, X. MVC Architecture Pattern Analysis. **Journal of Software Engineering and Applications**, v. 16, n. 4, 2023.
 11. AWS. **AWS Well-Architected Framework**, 2023.
 12. IJCSE. DevOps and Containerization Practices in Modern Software Architecture. **International Journal of Computer Science and Engineering**, v. 12, n. 3, 2024.
-
----
-
-## Documento Técnico-Científico
-
-O artigo completo está disponível em: [`/documentacao/Artigo_Comparativo_Arquitetural.docx`](documentacao/Artigo_Comparativo_Arquitetural.docx)
-
 ---
 
 > Projeto desenvolvido como parte da disciplina de Iniciação Científica — SENAI Gaspar Ricardo Junior, 2026.
