@@ -363,9 +363,9 @@ Cinco tipos recorrentes, e a distinção entre eles é relevante para posicionar
 | **Autores** | Victor Velepucha; Pamela Flores |
 | **Ano** | 2023 |
 | **Onde foi publicado** | *IEEE Access*, v. 11, p. 88339–88358 |
-| **DOI / Link** | [10.1109/ACCESS.2023.3305687](https://doi.org/10.1109/ACCESS.2023.3305687) |
+| **DOI / Link** | [10.1109/ACCESS.2023.3305687](https://doi.org/10.1109/ACCESS.2023.3305687) — https://ieeexplore.ieee.org/document/10220070/ (acesso aberto, CC BY-NC-ND) |
 
-**Relação com o tema desta IC.** Trata-se de um *survey* que sistematiza princípios, padrões e desafios de migração em arquitetura de microsserviços. A relação com esta pesquisa é de **posicionamento conceitual**, não de método: enquanto o Trabalho 1 fornece o modelo de experimento, este fornece o mapa da subárea. Três usos são imediatos. Primeiro, ajuda a situar Monólito, Camadas e Clean Architecture no espectro evolutivo dos padrões arquiteturais — papel que, na fundamentação atual do projeto, é cumprido por Fowler e Lewis (2014), um artigo de 2014 que este *survey* de 2023 atualiza. Segundo, o inventário de desafios de migração embasa a hipótese de que a Clean Architecture favorece a evolução futura para microsserviços, por isolar as regras de negócio e facilitar a extração de módulos. Terceiro, sendo publicado no mesmo periódico e sendo recente, serve de referência do padrão de redação e profundidade que o IEEE Access espera em artigos de arquitetura de software.
+**Relação com o tema desta IC.** Trata-se de um *survey* que sistematiza princípios, padrões e desafios de migração em arquitetura de microsserviços. A relação com esta pesquisa é de **posicionamento conceitual**, não de método: enquanto o Trabalho 1 fornece o modelo de experimento, este fornece o mapa da subárea. Três usos são imediatos. Primeiro, ajuda a situar Monólito, Camadas e Clean Architecture no espectro evolutivo dos padrões arquiteturais — papel que, na fundamentação atual do projeto, é cumprido por Fowler e Lewis (2014), um artigo de 2014 que este *survey* de 2023 atualiza. Segundo, o inventário de desafios de migração embasa a hipótese de que a Clean Architecture favorece a evolução futura para microsserviços, por isolar as regras de negócio e facilitar a extração de módulos. Terceiro, sendo publicado no mesmo periódico e sendo recente, serve de referência do padrão de redação e profundidade que o IEEE Access espera em artigos de arquitetura de software. O PDF integra o acervo do projeto, em [docs/artigos/TrabalhosRelacionados/](../docs/artigos/TrabalhosRelacionados/).
 
 ---
 
@@ -405,11 +405,26 @@ O arquivo [referencias/tarefa04-referencias.md](../referencias/tarefa04-referenc
 
 ## Referências Encontradas Nesta Atividade
 
-Trabalhos localizados durante esta pesquisa que ainda não constavam no levantamento bibliográfico do projeto e são candidatos a incorporação:
+Trabalhos localizados durante esta pesquisa que ainda não constavam no levantamento bibliográfico do projeto e são candidatos a incorporação. Os PDFs de acesso aberto foram baixados para [`docs/artigos/TrabalhosRelacionados/`](../docs/artigos/TrabalhosRelacionados/), junto aos demais trabalhos correlatos do acervo.
 
-1. VELEPUCHA, V.; FLORES, P. A Survey on Microservices Architecture: Principles, Patterns and Migration Challenges. **IEEE Access**, v. 11, p. 88339–88358, 2023. DOI: [10.1109/ACCESS.2023.3305687](https://doi.org/10.1109/ACCESS.2023.3305687).
-2. ASSUNÇÃO, W. K. G.; KRÜGER, J.; MOSSER, S.; SELAOUI, S. How do Microservices Evolve? An Empirical Analysis of Changes in Open-Source Microservice Repositories. **Journal of Systems and Software**, v. 204, art. 111788, 2023. DOI: [10.1016/j.jss.2023.111788](https://doi.org/10.1016/j.jss.2023.111788).
-3. ABGAZ, Y.; MCCARREN, A.; ELGER, P.; SOLAN, D.; LAPUZ, N.; BIVOL, M. *et al.* Decomposition of Monolith Applications Into Microservices Architectures: A Systematic Review. **IEEE Transactions on Software Engineering**, v. 49, n. 8, p. 4213–4242, 2023. DOI: [10.1109/TSE.2023.3287297](https://doi.org/10.1109/TSE.2023.3287297).
+**1. VELEPUCHA, V.; FLORES, P.** A Survey on Microservices Architecture: Principles, Patterns and Migration Challenges. **IEEE Access**, v. 11, p. 88339–88358, 2023. DOI: [10.1109/ACCESS.2023.3305687](https://doi.org/10.1109/ACCESS.2023.3305687).
+
+- Acesso aberto (*gold*), licença CC BY-NC-ND — status confirmado pela API do Semantic Scholar.
+- Página oficial: https://ieeexplore.ieee.org/document/10220070/
+- Registro no DOAJ: https://doaj.org/article/516776267ef44d2493dcc8e963744199
+- **PDF no acervo:** [Velepucha_Flores_2023_Survey_Microservices_Architecture_IEEE_Access.pdf](../docs/artigos/TrabalhosRelacionados/Velepucha_Flores_2023_Survey_Microservices_Architecture_IEEE_Access.pdf) — 20 páginas, 1,7 MB. Obtido por download manual: o IEEE Xplore bloqueia requisições automatizadas, ainda que o artigo seja gratuito.
+
+**2. ASSUNÇÃO, W. K. G.; KRÜGER, J.; MOSSER, S.; SELAOUI, S.** How do Microservices Evolve? An Empirical Analysis of Changes in Open-Source Microservice Repositories. **Journal of Systems and Software**, v. 204, art. 111788, 2023. DOI: [10.1016/j.jss.2023.111788](https://doi.org/10.1016/j.jss.2023.111788).
+
+- Versão do editor, sob assinatura: https://www.sciencedirect.com/science/article/pii/S0164121223001838
+- Cópia auto-arquivada pelos próprios autores (*green open access*): https://jacobkrueger.github.io/assets/papers/Assuncao2023MicroserviceEvolution.pdf
+- **PDF no acervo:** [Assuncao_et_al_2023_How_do_Microservices_Evolve_JSS.pdf](../docs/artigos/TrabalhosRelacionados/Assuncao_et_al_2023_How_do_Microservices_Evolve_JSS.pdf) — 14 páginas, 584 KB
+
+**3. ABGAZ, Y.; MCCARREN, A.; ELGER, P.; SOLAN, D.; LAPUZ, N.; BIVOL, M. *et al.*** Decomposition of Monolith Applications Into Microservices Architectures: A Systematic Review. **IEEE Transactions on Software Engineering**, v. 49, n. 8, p. 4213–4242, 2023. DOI: [10.1109/TSE.2023.3287297](https://doi.org/10.1109/TSE.2023.3287297).
+
+- Acesso aberto sob licença CC BY 4.0.
+- Depósito institucional (Dublin City University): https://doras.dcu.ie/28925/
+- **PDF no acervo:** [Abgaz_et_al_2023_Decomposition_Monolith_Microservices_IEEE_TSE.pdf](../docs/artigos/TrabalhosRelacionados/Abgaz_et_al_2023_Decomposition_Monolith_Microservices_IEEE_TSE.pdf) — 30 páginas, 5,0 MB
 
 ---
 
