@@ -95,8 +95,8 @@ As Diretrizes também afirmam que os templates valem para a **primeira página**
 
 | Arquivo | Uso |
 |---|---|
-| `resumo-expandido.docx` | Template completo, **com** bloco de autores. ORCID, CPF e e-mail aparecem como `[preencher]` |
-| `resumo-expandido-sem-autores.docx` | Mesmo texto **sem** o bloco de autores, para o caso de o sistema exigir avaliação sem identificação |
+| `template_artigo_2024_comparativo_arquitetural.docx` | Template completo, **com** bloco de autores. ORCID, CPF e e-mail aparecem como `[preencher]` |
+| `template_artigo_2024_comparativo_arquitetural_sem-autores.docx` | Mesmo texto **sem** o bloco de autores, para o caso de o sistema exigir avaliação sem identificação |
 
 ORCID, CPF e e-mail **não estão no repositório de propósito**. Preencha no `.docx` local antes de enviar e não faça commit dessa versão.
 
@@ -153,9 +153,9 @@ As Diretrizes do 21º CONTECSI exigem que trechos produzidos com IA fiquem entre
 
 | Arquivo | Conteúdo |
 |---|---|
-| [manuscrito/resumo-expandido.docx](manuscrito/resumo-expandido.docx) | Manuscrito no template, com bloco de autores (campos pessoais a preencher) |
-| [manuscrito/resumo-expandido-sem-autores.docx](manuscrito/resumo-expandido-sem-autores.docx) | Mesmo texto, sem bloco de autores |
-| [manuscrito/resumo-expandido.pdf](manuscrito/resumo-expandido.pdf) e [-sem-autores.pdf](manuscrito/resumo-expandido-sem-autores.pdf) | Exportações para revisão. **Não são a versão submetida.** |
+| [manuscrito/template_artigo_2024_comparativo_arquitetural.docx](manuscrito/template_artigo_2024_comparativo_arquitetural.docx) | Manuscrito no template, com bloco de autores (campos pessoais a preencher) |
+| [manuscrito/template_artigo_2024_comparativo_arquitetural_sem-autores.docx](manuscrito/template_artigo_2024_comparativo_arquitetural_sem-autores.docx) | Mesmo texto, sem bloco de autores |
+| [manuscrito/template_artigo_2024_comparativo_arquitetural.pdf](manuscrito/template_artigo_2024_comparativo_arquitetural.pdf) e [versão sem autores](manuscrito/template_artigo_2024_comparativo_arquitetural_sem-autores.pdf) | Exportações para revisão. **Não são a versão submetida.** |
 | [metadados-submissao.md](metadados-submissao.md) | Dados a preencher nos 5 passos do sistema e checklist das declarações |
 | [referencias/fontes-e-trabalhos-relacionados.md](referencias/fontes-e-trabalhos-relacionados.md) | Fontes citadas, verificação e correções de metadados |
 

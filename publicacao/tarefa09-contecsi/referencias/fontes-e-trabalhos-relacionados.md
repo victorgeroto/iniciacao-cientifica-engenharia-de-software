@@ -1,6 +1,6 @@
 # Fontes e trabalhos relacionados — Atividade 09
 
-Fontes citadas no manuscrito [`resumo-expandido.docx`](../manuscrito/resumo-expandido.docx), exibidas no padrão ABNT (NBR 6023) do template adotado, mais as fontes de regras e exemplos consultados.
+Fontes citadas no manuscrito [`template_artigo_2024_comparativo_arquitetural.docx`](../manuscrito/template_artigo_2024_comparativo_arquitetural.docx), exibidas no padrão ABNT (NBR 6023) do template adotado, mais as fontes de regras e exemplos consultados.
 
 **Conferência citação ↔ referência:** 14 obras citadas no texto, 14 na lista, todas em correspondência.
 

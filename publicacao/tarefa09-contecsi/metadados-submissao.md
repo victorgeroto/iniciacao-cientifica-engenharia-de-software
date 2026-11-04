@@ -30,7 +30,7 @@ Dados prontos para preencher no sistema de submissão
 
 ## Passo 2 — Transferência do manuscrito
 
-Arquivo: [`manuscrito/resumo-expandido.docx`](manuscrito/resumo-expandido.docx) (template, com autores) ou [`manuscrito/resumo-expandido-sem-autores.docx`](manuscrito/resumo-expandido-sem-autores.docx), conforme a resposta da coordenação.
+Arquivo: [`manuscrito/template_artigo_2024_comparativo_arquitetural.docx`](manuscrito/template_artigo_2024_comparativo_arquitetural.docx) (template, com autores) ou [`manuscrito/template_artigo_2024_comparativo_arquitetural_sem-autores.docx`](manuscrito/template_artigo_2024_comparativo_arquitetural_sem-autores.docx), conforme a resposta da coordenação.
 
 Antes de enviar, remover informações pessoais das propriedades do arquivo: **Arquivo → Informações → Inspecionar Documento**. Os arquivos gerados já estão com autor e "modificado por" vazios, mas isso deve ser conferido após qualquer edição no Word.
 
