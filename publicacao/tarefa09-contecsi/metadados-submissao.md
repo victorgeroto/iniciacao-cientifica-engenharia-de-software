@@ -3,8 +3,8 @@
 Dados prontos para preencher no sistema de submissão
 (https://contecsi.tecsi.org/index.php/contecsi/21CONTECSI/author/submit), conforme os 5 passos descritos nas Diretrizes para Autores.
 
-> **Não versionar** CPF, ORCID, e-mails nem a senha do sistema. Esses dados são preenchidos diretamente na plataforma.
-> O campo de espaços abaixo é marcado com `␣` para indicar um espaço literal; ao colar, digite os espaços.
+> **Não versionar** CPF, ORCID, e-mails nem a senha do sistema. Esses dados são preenchidos diretamente na plataforma e no `.docx` local.
+> O símbolo `␣` indica um espaço literal; ao colar, digite os espaços.
 
 ---
 
@@ -14,7 +14,8 @@ Dados prontos para preencher no sistema de submissão
 - [ ] Em **Meu Perfil**, no final da tela, a caixa **AUTOR** está marcada. Sem ela o sistema não permite submeter.
 - [ ] CPF do responsável pela submissão cadastrado no perfil (obrigatório).
 - [ ] ORCID dos três autores em mãos (obrigatório para todos, sem exceção).
-- [ ] Template REX oficial obtido e manuscrito transposto, ou decisão registrada de enviar com as regras gerais.
+- [ ] Coordenação consultada sobre qual formato vale (template × Diretrizes; ver o [README](README.md#divergências-entre-o-template-e-as-diretrizes-do-21º-contecsi)).
+- [ ] Campos `[preencher]` do bloco de autores completados no `.docx` local, se for enviada a versão com autores.
 - [ ] Orientadores revisaram o manuscrito e confirmaram a lista e a ordem de autores.
 
 ---
@@ -29,9 +30,9 @@ Dados prontos para preencher no sistema de submissão
 
 ## Passo 2 — Transferência do manuscrito
 
-Arquivo: [`manuscrito/resumo-expandido.docx`](manuscrito/resumo-expandido.docx), ou a versão já transposta para o template oficial.
+Arquivo: [`manuscrito/resumo-expandido.docx`](manuscrito/resumo-expandido.docx) (template, com autores) ou [`manuscrito/resumo-expandido-sem-autores.docx`](manuscrito/resumo-expandido-sem-autores.docx), conforme a resposta da coordenação.
 
-Antes de enviar, remover informações pessoais das propriedades do arquivo: **Arquivo → Informações → Inspecionar Documento**. O arquivo gerado já está com autor e "modificado por" vazios, mas deve ser conferido após qualquer edição no Word.
+Antes de enviar, remover informações pessoais das propriedades do arquivo: **Arquivo → Informações → Inspecionar Documento**. Os arquivos gerados já estão com autor e "modificado por" vazios, mas isso deve ser conferido após qualquer edição no Word.
 
 ## Passo 3 — Metadados
 
@@ -43,7 +44,7 @@ Antes de enviar, remover informações pessoais das propriedades do arquivo: **A
 | 2 | Deivison Shindi Takatu | Orientador | Centro Universitário SENAI São Paulo — UNISENAI-SP, Campus Sorocaba | Brasil |
 | 3 | Glauco Todesco | Orientador | Centro Universitário SENAI São Paulo — UNISENAI-SP, Campus Sorocaba | Brasil |
 
-ORCID de cada autor: colar a URL completa (`https://orcid.org/...`) no campo URL. **A confirmar com os orientadores:** grafia dos nomes e ordem.
+ORCID de cada autor: colar a URL completa (`https://orcid.org/...`) no campo URL. **A confirmar com os orientadores:** grafia dos nomes e ordem. No manuscrito, ambos constam como "Orientador" (o template tem também o campo "Co-orientador", não usado).
 
 O sistema chama todos de "autor"; não existe o termo "coautor".
 
@@ -68,19 +69,19 @@ ARCHITECTURAL COMPARISON: MONOLITH, LAYERED ARCHITECTURE (MVC) AND CLEAN ARCHITE
 ### Resumo (campo único: inglês, dois parágrafos de separação, português)
 
 ```
-This paper presents an ongoing comparative study among three widely used architectural patterns in software systems development: Monolith, Layered Architecture (MVC), and Clean Architecture. The research addresses the growing need for architectural decisions grounded in empirical evidence, since many technical decisions are still based on subjective preferences or market trends. To conduct the analysis, a tripartite prototype is proposed: the same task management application developed three times, each following a distinct architectural pattern, hosted on Amazon Web Services (AWS) cloud infrastructure, with performance metrics collected via Apache JMeter and monitored through Amazon CloudWatch and Grafana. The research is currently at the architectural specification and experimental planning stage, and the metrics collection phase has not yet been carried out. The expected contribution is a set of evidence-based guidelines for architectural pattern selection according to the project profile and organizational context.
+This work aims to compare, quantitatively and qualitatively, the performance, integration and maintainability of software systems structured in three architectural patterns: Monolith, Layered Architecture (MVC) and Clean Architecture. The methodology consists of a tripartite prototype, in which the same task management application is developed three times, keeping the domain, the language (TypeScript with Node.js), the database (PostgreSQL) and the Amazon Web Services (AWS) cloud infrastructure constant, with load controlled by Apache JMeter and monitoring via Amazon CloudWatch and Grafana. The research is ongoing, at the architectural specification and experimental planning stage; metrics collection has not yet been carried out and there are no consolidated quantitative results. As partial results, the gap in the literature, which mostly compares monoliths and microservices, was delimited, and the hypothesis was formulated that Clean Architecture will show better testability and lower coupling, while the Monolith will show lower latency under low load. The expected outcome is a set of evidence-based guidelines for selecting the architectural pattern according to the project context.
 
 
-Este trabalho apresenta um estudo comparativo em desenvolvimento entre três padrões arquiteturais amplamente utilizados no desenvolvimento de sistemas de software: Monólito, Arquitetura em Camadas (MVC) e Clean Architecture. A pesquisa aborda a necessidade de escolhas arquiteturais fundamentadas em evidências empíricas, já que muitas decisões técnicas ainda se baseiam em preferências subjetivas ou tendências de mercado. Para conduzir a análise, propõe-se um protótipo tripartido: a mesma aplicação de gerenciamento de tarefas desenvolvida três vezes, cada uma seguindo um padrão arquitetural distinto, hospedado na infraestrutura em nuvem da Amazon Web Services (AWS), com coleta de métricas de desempenho pelo Apache JMeter e monitoramento via Amazon CloudWatch e Grafana. A pesquisa encontra-se em estágio de especificação arquitetural e planejamento experimental, e a coleta de métricas ainda não foi executada. A contribuição esperada é a proposição de diretrizes baseadas em evidências para a seleção de padrões arquiteturais conforme o perfil e o contexto organizacional do projeto.
+Este trabalho tem como objetivo comparar, de forma quantitativa e qualitativa, o desempenho, a integração e a manutenibilidade de sistemas de software estruturados em três padrões arquiteturais: Monólito, Arquitetura em Camadas (MVC) e Clean Architecture. A metodologia consiste em um protótipo tripartido, no qual a mesma aplicação de gerenciamento de tarefas é desenvolvida três vezes, mantendo constantes o domínio, a linguagem (TypeScript com Node.js), o banco de dados (PostgreSQL) e a infraestrutura em nuvem da Amazon Web Services (AWS), com carga controlada pelo Apache JMeter e monitoramento via Amazon CloudWatch e Grafana. A pesquisa está em andamento, em estágio de especificação arquitetural e planejamento experimental; a coleta de métricas ainda não foi executada e não há resultados quantitativos consolidados. Como resultados parciais, delimitou-se a lacuna da literatura, que compara majoritariamente monólitos e microsserviços, e formulou-se a hipótese de que a Clean Architecture apresentará melhor testabilidade e menor acoplamento, enquanto o Monólito terá menor latência em baixa carga. Espera-se produzir diretrizes baseadas em evidências para a seleção do padrão arquitetural conforme o contexto do projeto.
 ```
 
-Inglês: 139 palavras. Português: 152 palavras. Ambos abaixo do limite de 200 palavras (1.800 caracteres).
+Resumo em português com 174 palavras; limite do template: 250.
 
 ### Indexação
 
 | Campo | Valor |
 |---|---|
-| **Palavras-chave** (5 em inglês, cinco espaços, 5 em português) | `software architecture; Clean Architecture; MVC; monolith; scalability␣␣␣␣␣arquitetura de software; Clean Architecture; MVC; monólito; escalabilidade` |
+| **Palavras-chave** (5 em inglês, cinco espaços, 5 em português) | `Cloud Computing; Maintainability; Performance; Scalability; Software Architecture␣␣␣␣␣Arquitetura de Software; Computação em Nuvem; Desempenho; Escalabilidade; Manutenibilidade` |
 | **Idioma** | Português (com título e resumo também em inglês) |
 | **Agências de fomento** | A definir com os orientadores se o apoio institucional deve ser informado. O manuscrito não declara financiamento |
 
@@ -106,13 +107,13 @@ Itens que o formulário do Passo 1 exige marcar. Marcar apenas o que for verdade
 
 | Declaração | Situação |
 |---|---|
-| Texto em Word, espaço 1,5, Times New Roman 12, itálico em vez de sublinhado, figuras e tabelas no texto | ✅ Atendido pelo manuscrito atual |
-| Li a seção Modalidades da Conferência (estilo e tamanho máximo) | ✅ REX: 5 a 8 páginas; manuscrito com 7 |
+| Texto em Word, espaço 1,5, Times New Roman 12, itálico em vez de sublinhado, figuras e tabelas no texto | ⚠️ **Divergência:** o manuscrito usa Arial 12, conforme o template. Se a coordenação exigir Times New Roman, trocar a fonte do documento. Demais itens atendidos |
+| Li a seção Modalidades da Conferência (estilo e tamanho máximo) | ✅ REX: 5 a 8 páginas; manuscrito com 6 |
 | O artigo não foi publicado nem está em consideração por outra conferência | ⚠️ **Conferir.** O resumo da Atividade 07, para o III Congresso UniSENAI-SP, tem conteúdo muito próximo. Confirmar com os orientadores se há impedimento e, se necessário, explicar no campo "Comentários ao diretor da conferência" |
-| O texto não contém nomes dos autores e filiação, que constam nos Metadados | ✅ Atendido (verificar caso o template REX exija bloco de autores) |
+| O texto não contém os nomes dos autores e filiação, que constam nos Metadados | ⚠️ Atendido apenas pela versão `-sem-autores`. A versão do template traz o bloco de autores |
 | Ciência de que o autor correspondente é o único responsável pelos dados dos autores | ⬜ Declaração do autor |
 | URLs ativas e clicáveis | ✅ As URLs das referências são DOIs |
-| Padrões de estilo e requisitos bibliográficos (APA) | ✅ Atendido |
+| Padrões de estilo e requisitos bibliográficos | ⚠️ **Divergência:** o manuscrito usa ABNT, conforme o template; as Diretrizes citam APA. Confirmar com a coordenação |
 | Documentos Office salvos com remoção de informações pessoais | ⬜ Conferir antes do envio |
 | Ciência de todas as instruções e aceite das condições | ⬜ Declaração do autor |
 | Declaração de Direito Autoral (licença Creative Commons Atribuição) | ⬜ Declaração do autor |

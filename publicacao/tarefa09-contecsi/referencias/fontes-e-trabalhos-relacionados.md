@@ -1,6 +1,6 @@
 # Fontes e trabalhos relacionados — Atividade 09
 
-Fontes citadas no manuscrito [`resumo-expandido.docx`](../manuscrito/resumo-expandido.docx), exibidas no padrão APA exigido pelas Diretrizes do 21º CONTECSI, mais as fontes de regras e exemplos consultados.
+Fontes citadas no manuscrito [`resumo-expandido.docx`](../manuscrito/resumo-expandido.docx), exibidas no padrão ABNT (NBR 6023) do template adotado, mais as fontes de regras e exemplos consultados.
 
 **Conferência citação ↔ referência:** 14 obras citadas no texto, 14 na lista, todas em correspondência.
 
@@ -18,22 +18,24 @@ Fontes citadas no manuscrito [`resumo-expandido.docx`](../manuscrito/resumo-expa
 
 **Lacuna delimitada:** nenhum dos estudos identificados avalia empiricamente a Clean Architecture em comparação controlada com o monólito e com a Arquitetura em Camadas, sob identidade funcional, de linguagem e de infraestrutura.
 
-## Referências do manuscrito (APA)
+## Referências do manuscrito (ABNT)
 
-- Abgaz, Y., McCarren, A., Elger, P., Solan, D., Lapuz, N., Bivol, M., Jackson, G., Yilmaz, M., Buckley, J., & Clarke, P. (2023). Decomposition of monolith applications into microservices architectures: A systematic review. *IEEE Transactions on Software Engineering*, *49*(8), 4213–4242. https://doi.org/10.1109/TSE.2023.3287297
-- Amazon Web Services. (2023). *AWS Well-Architected Framework*. Recuperado em 20 de maio de 2026, de https://aws.amazon.com/architecture/well-architected/
-- Bass, L., Clements, P., & Kazman, R. (2012). *Software architecture in practice* (3rd ed.). Addison-Wesley.
-- Blinowski, G., Ojdowska, A., & Przybyłek, A. (2022). Monolithic vs. microservice architecture: A performance and scalability evaluation. *IEEE Access*, *10*, 20357–20374. https://doi.org/10.1109/ACCESS.2022.3152803
-- Di Francesco, P., Lago, P., & Malavolta, I. (2019). Architecting with microservices: A systematic mapping study. *Journal of Systems and Software*, *150*, 77–97. https://doi.org/10.1016/j.jss.2019.01.001
-- Dragoni, N., Giallorenzo, S., Lluch Lafuente, A., Mazzara, M., Montesi, F., Mustafin, R., & Safina, L. (2017). Microservices: Yesterday, today, and tomorrow. In M. Mazzara & B. Meyer (Eds.), *Present and ulterior software engineering* (pp. 195–216). Springer.
-- Fowler, M. (2002). *Patterns of enterprise application architecture*. Addison-Wesley.
-- Garlan, D., & Shaw, M. (1993). An introduction to software architecture. In V. Ambriola & G. Tortora (Eds.), *Advances in software engineering and knowledge engineering* (pp. 1–39). World Scientific Publishing.
-- Martin, R. C. (2017). *Clean architecture: A craftsman's guide to software structure and design*. Prentice Hall.
-- Newman, S. (2015). *Building microservices: Designing fine-grained systems*. O'Reilly Media.
-- Richards, M. (2015). *Software architecture patterns*. O'Reilly Media.
-- Tapia, F., Mora, M. Á., Fuertes, W., Aules, H., Flores, E., & Toulkeridis, T. (2020). From monolithic systems to microservices: A comparative study of performance. *Applied Sciences*, *10*(17), Article 5797. https://doi.org/10.3390/app10175797
-- Tu, Z. (2023). Research on the application of layered architecture in computer software development. *Journal of Computing and Electronic Information Management*, *11*(3), 34–38. https://doi.org/10.54097/jceim.v11i3.08
-- Velepucha, V., & Flores, P. (2023). A survey on microservices architecture: Principles, patterns and migration challenges. *IEEE Access*, *11*, 88339–88358. https://doi.org/10.1109/ACCESS.2023.3305687
+- ABGAZ, Y. *et al.* Decomposition of monolith applications into microservices architectures: a systematic review. **IEEE Transactions on Software Engineering**, v. 49, n. 8, p. 4213-4242, 2023. DOI: 10.1109/TSE.2023.3287297.
+- AMAZON WEB SERVICES. **AWS Well-Architected Framework**. [S. l.]: AWS, 2023. Disponível em: https://aws.amazon.com/architecture/well-architected/. Acesso em: 20 maio 2026.
+- BASS, L.; CLEMENTS, P.; KAZMAN, R. **Software architecture in practice**. 3. ed. Boston: Addison-Wesley, 2012.
+- BLINOWSKI, G.; OJDOWSKA, A.; PRZYBYŁEK, A. Monolithic vs. microservice architecture: a performance and scalability evaluation. **IEEE Access**, v. 10, p. 20357-20374, 2022. DOI: 10.1109/ACCESS.2022.3152803.
+- DI FRANCESCO, P.; LAGO, P.; MALAVOLTA, I. Architecting with microservices: a systematic mapping study. **Journal of Systems and Software**, v. 150, p. 77-97, 2019. DOI: 10.1016/j.jss.2019.01.001.
+- DRAGONI, N. *et al.* Microservices: yesterday, today, and tomorrow. *In*: MAZZARA, M.; MEYER, B. (ed.). **Present and ulterior software engineering**. Cham: Springer, 2017. p. 195-216.
+- FOWLER, M. **Patterns of enterprise application architecture**. Boston: Addison-Wesley, 2002.
+- GARLAN, D.; SHAW, M. An introduction to software architecture. *In*: AMBRIOLA, V.; TORTORA, G. (ed.). **Advances in software engineering and knowledge engineering**. Singapore: World Scientific Publishing, 1993. p. 1-39.
+- MARTIN, R. C. **Clean architecture**: a craftsman's guide to software structure and design. Upper Saddle River: Prentice Hall, 2017.
+- NEWMAN, S. **Building microservices**: designing fine-grained systems. Sebastopol: O'Reilly Media, 2015.
+- RICHARDS, M. **Software architecture patterns**. Sebastopol: O'Reilly Media, 2015.
+- TAPIA, F. *et al.* From monolithic systems to microservices: a comparative study of performance. **Applied Sciences**, v. 10, n. 17, art. 5797, 2020. DOI: 10.3390/app10175797.
+- TU, Z. Research on the application of layered architecture in computer software development. **Journal of Computing and Electronic Information Management**, v. 11, n. 3, p. 34-38, 2023. DOI: 10.54097/jceim.v11i3.08.
+- VELEPUCHA, V.; FLORES, P. A survey on microservices architecture: principles, patterns and migration challenges. **IEEE Access**, v. 11, p. 88339-88358, 2023. DOI: 10.1109/ACCESS.2023.3305687.
+
+*Versão em APA (exigida pelas Diretrizes do 21º CONTECSI), caso a coordenação confirme esse padrão: a lista completa de autores foi conferida nos PDFs e consta no histórico do commit `007ee33`.*
 
 ## Verificação dos metadados
 
@@ -63,6 +65,6 @@ A inicial do primeiro autor (F. e Z.) não muda, então as referências do resum
 | [Nova submissão — 21º CONTECSI](https://contecsi.tecsi.org/index.php/contecsi/21CONTECSI/author/submit) | Passos 1 a 5, tipos de sessão, declarações |
 | [20º CONTECSI, trilha 115 (REX)](https://contecsi.tecsi.org/index.php/contecsi/20CONTECSI/schedConf/presentations?searchField=&searchMatch=&search=&track=115) | Exemplos REX: trabalhos 7207 e 7219 |
 | [20º CONTECSI, trilha 110 (PSE)](https://contecsi.tecsi.org/index.php/contecsi/20CONTECSI/schedConf/presentations?searchField=&searchMatch=&search=&track=110) | Indicada no enunciado como REX; contém artigos completos |
-| [Template de referência (Google Docs)](https://docs.google.com/document/d/1C4jklGs0GD4qqeRCcdU-DnKSme6qe6ZT6-KXR0ltxfE/edit?tab=t.0) | Modelo Fatec Itapetininga 2024; apenas referência de seções, não de formatação |
+| [Template de referência (Google Docs)](https://docs.google.com/document/d/1C4jklGs0GD4qqeRCcdU-DnKSme6qe6ZT6-KXR0ltxfE/edit?tab=t.0) | Template REX do 1º Congresso CONTECSI, Trilha de Graduação (2024); base de formatação do manuscrito |
 | Atividade 06 — [tarefa06-publicacao.md](../../tarefa06-publicacao.md) | Levantamento dos trabalhos correlatos |
 | Atividade 07 — [tarefa07-congresso.md](../../tarefa07-congresso.md) | Resumo expandido que originou o manuscrito |
