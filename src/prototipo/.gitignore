@@ -1,0 +1,9 @@
+node_modules/
+dist/
+coverage/
+*.log
+*.tsbuildinfo
+backend/bench/data/
+backend/jmeter/*.jtl
+backend/jmeter/relatorio-*/
+.env

@@ -1,0 +1,24 @@
+# Dependências (recriadas com npm install) — nunca versionar
+node_modules/
+
+# Arquivos gerados por build e testes
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Logs, segredos e lixo do sistema
+*.log
+.env
+.env.*
+!.env.example
+Thumbs.db
+.DS_Store
+
+# Arquivos temporários do Word
+~$*
