@@ -1,0 +1,21 @@
+{
+  "name": "prototipo-backend",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Protótipo tripartido: a mesma API de tarefas em Monólito, Camadas (MVC) e Clean Architecture, mais o serviço de benchmark.",
+  "workspaces": ["shared", "api-monolito", "api-camadas", "api-clean", "bench"],
+  "scripts": {
+    "build": "npm run build -w shared && npm run build -w api-monolito -w api-camadas -w api-clean -w bench",
+    "typecheck": "npm run build -w shared && tsc -p api-monolito --noEmit && tsc -p api-camadas --noEmit && tsc -p api-clean --noEmit && tsc -p bench --noEmit",
+    "test": "npm run test -w api-monolito -w api-camadas -w api-clean -w bench",
+    "coverage": "npm run coverage -w api-monolito -w api-camadas -w api-clean",
+    "test:e2e": "npm run test:e2e -w bench"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@vitest/coverage-v8": "^2.1.8",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
