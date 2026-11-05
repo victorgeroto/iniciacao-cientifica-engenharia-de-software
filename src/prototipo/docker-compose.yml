@@ -1,0 +1,101 @@
+# Protótipo tripartido — sobe tudo com: docker compose up --build
+# Interface: http://localhost:8080
+#
+# Cada API tem o próprio PostgreSQL (isolamento das medições) e os mesmos
+# limites de CPU e memória, para que só a arquitetura varie.
+
+x-db: &db
+  image: postgres:16-alpine
+  environment:
+    POSTGRES_USER: proto
+    POSTGRES_PASSWORD: proto
+  healthcheck:
+    test: ["CMD-SHELL", "pg_isready -U proto"]
+    interval: 3s
+    timeout: 3s
+    retries: 20
+  cpus: 1.0
+  mem_limit: 512m
+
+x-api: &api
+  build: ./backend
+  image: prototipo-backend:latest
+  restart: unless-stopped
+  cpus: 1.0
+  mem_limit: 512m
+
+services:
+  db-monolito:
+    <<: *db
+    environment: { POSTGRES_USER: proto, POSTGRES_PASSWORD: proto, POSTGRES_DB: monolito }
+    ports: ["5433:5432"]
+    volumes: [pg-monolito:/var/lib/postgresql/data]
+
+  db-camadas:
+    <<: *db
+    environment: { POSTGRES_USER: proto, POSTGRES_PASSWORD: proto, POSTGRES_DB: camadas }
+    ports: ["5434:5432"]
+    volumes: [pg-camadas:/var/lib/postgresql/data]
+
+  db-clean:
+    <<: *db
+    environment: { POSTGRES_USER: proto, POSTGRES_PASSWORD: proto, POSTGRES_DB: clean }
+    ports: ["5435:5432"]
+    volumes: [pg-clean:/var/lib/postgresql/data]
+
+  api-monolito:
+    <<: *api
+    command: ["node", "api-monolito/dist/server.js"]
+    environment:
+      PORT: 3001
+      DATABASE_URL: postgres://proto:proto@db-monolito:5432/monolito
+      JWT_SECRET: ${JWT_SECRET:-troque-este-segredo}
+    ports: ["3001:3001"]
+    depends_on: { db-monolito: { condition: service_healthy } }
+
+  api-camadas:
+    <<: *api
+    command: ["node", "api-camadas/dist/server.js"]
+    environment:
+      PORT: 3002
+      DATABASE_URL: postgres://proto:proto@db-camadas:5432/camadas
+      JWT_SECRET: ${JWT_SECRET:-troque-este-segredo}
+    ports: ["3002:3002"]
+    depends_on: { db-camadas: { condition: service_healthy } }
+
+  api-clean:
+    <<: *api
+    command: ["node", "api-clean/dist/main.js"]
+    environment:
+      PORT: 3003
+      DATABASE_URL: postgres://proto:proto@db-clean:5432/clean
+      JWT_SECRET: ${JWT_SECRET:-troque-este-segredo}
+    ports: ["3003:3003"]
+    depends_on: { db-clean: { condition: service_healthy } }
+
+  bench:
+    image: prototipo-backend:latest
+    command: ["node", "bench/dist/server.js"]
+    restart: unless-stopped
+    environment:
+      PORT: 3000
+      MONOLITO_URL: http://api-monolito:3001
+      CAMADAS_URL: http://api-camadas:3002
+      CLEAN_URL: http://api-clean:3003
+      SOURCES_DIR: /app
+      DATA_DIR: /resultados
+    ports: ["3000:3000"]
+    # Os resultados dos testes de carga vão direto para data/bruto do repositório.
+    volumes: ["../../data/bruto/carga:/resultados"]
+    depends_on: [api-monolito, api-camadas, api-clean]
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    ports: ["8080:80"]
+    depends_on: [bench]
+
+volumes:
+  pg-monolito:
+  pg-camadas:
+  pg-clean:
