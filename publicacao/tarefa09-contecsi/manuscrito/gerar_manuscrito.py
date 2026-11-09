@@ -9,6 +9,7 @@ Saída (nesta pasta): template_artigo_2024_comparativo_arquitetural.docx e a ver
 """
 import csv
 import json
+from datetime import datetime
 import re
 import sys
 import tempfile
@@ -91,6 +92,8 @@ def novo_documento(sem_autores):
     st.paragraph_format.space_before = st.paragraph_format.space_after = Pt(0)
     cp = doc.core_properties
     cp.author = cp.last_modified_by = cp.title = cp.comments = cp.subject = cp.keywords = cp.category = ""
+    # O modelo do python-docx traz 2013-12-23; datas herdadas assim são incoerentes com a submissão.
+    cp.created = cp.modified = datetime.now()
     return doc, sec
 
 
@@ -272,6 +275,7 @@ def fatos(d):
         t = teste(d, "cenarios", "create", m)
         assert t and t["p"] < 0.05, f"o texto afirma diferença em 'criar'/{m}, mas p = {t and t['p']}"
     f["p_criar"] = teste(d, "cenarios", "create", "throughput_rps")["p"]
+    assert f["p_criar"] < 0.05 / len(CEN), "a diferença em 'criar' não resiste a Bonferroni para os 4 cenários"
     f["p_leitura_min"] = min(teste(d, "cenarios", c, m)["p"] for c in leitura for m in METS)
     tp = {a: media(d, "cenarios", "create", "throughput_rps", a) for a in ARQS}
     assert tp["monolito"] > tp["camadas"] > tp["clean"], "ordem do throughput em 'criar' mudou"
@@ -295,7 +299,39 @@ def fatos(d):
     f["n"] = int(d["idx"][("cenarios", "list", "throughput_rps", "monolito")]["n"])
     f["escala"] = all(("carga", c, "throughput_rps", "monolito") in d["idx"] for c, _ in CARGA) and \
         all(("vertical", c, "throughput_rps", "monolito") in d["idx"] for c, _ in VERT)
+    if f["escala"]:
+        chaves = [("carga", c) for c, _ in CARGA] + [("vertical", c) for c, _ in VERT]
+        f["esc_total"] = len(chaves)
+        f["esc_sig"] = sum(1 for fase, c in chaves if teste(d, fase, c, "throughput_rps")["p"] < 0.05)
+        rotulos = {("carga", c): f"{x} conexões" for c, x in CARGA}
+        rotulos.update({("vertical", c): f"{x} vCPU" for c, x in VERT})
+        lista = [(rotulos[k], teste(d, k[0], k[1], "throughput_rps")["p"]) for k in chaves
+                 if teste(d, k[0], k[1], "throughput_rps")["p"] < 0.05]
+        f["esc_bonf"] = 0.05 / len(chaves)
+        f["cv_escala_max"] = max(cv(d, fase, c, "throughput_rps", a) for fase, c in chaves for a in ARQS)
+        f["esc_sobrevive"] = any(p < f["esc_bonf"] for _, p in lista)
+        f["esc_txt"] = ", ".join(f"{r}, p = {pval(p)}" for r, p in lista)
+        f["speedup2"] = {r["arquitetura"]: float(r["speedup_vs_1vcpu"]) for r in d["vertical"]
+                         if float(r["vcpu"]) == 2.0}
+        f["razao100"] = {a: media(d, "carga", "c100", "throughput_rps", a) / media(d, "carga", "c010", "throughput_rps", a)
+                         for a in ARQS}
+        f["medicoes"] = len({(k[0], k[1]) for k in d["idx"]}) * 3 * f["n"]
     return f
+
+
+def frase_escala(f, lang):
+    sp, k, n = f["speedup2"], f["esc_sig"], f["esc_total"]
+    if lang == "pt":
+        base = (f"Na escalabilidade, ao dobrar a CPU de 1 para 2 vCPU o throughput foi multiplicado por "
+                f"{br(sp['monolito'], 2)}, {br(sp['camadas'], 2)} e {br(sp['clean'], 2)}, ")
+        return base + ("sem diferença significativa entre as versões em nenhuma das oito condições de carga e CPU."
+                       if k == 0 else f"com diferença significativa entre as versões em {k} das {n} condições de carga e CPU"
+                       + ("" if f["esc_sobrevive"] else ", que não resiste à correção de Bonferroni") + ".")
+    base = (f"Regarding scalability, doubling the CPU from 1 to 2 vCPU multiplied throughput by "
+            f"{br(sp['monolito'], 2)}, {br(sp['camadas'], 2)} and {br(sp['clean'], 2)}, ")
+    return base + ("with no significant difference among versions in any of the eight load and CPU conditions."
+                   if k == 0 else f"with a significant difference among versions in {k} of {n} load and CPU conditions"
+                   + ("" if f["esc_sobrevive"] else ", which does not survive Bonferroni correction") + ".")
 
 
 def pct(x):
@@ -305,73 +341,76 @@ def pct(x):
 def textos(d, f):
     ta, tc = f["tp_criar"]["monolito"], f["tp_criar"]["clean"]
     cn, it = f["cob_negocio"], f["infra"]
+    esc_pt = (" " + frase_escala(f, "pt")) if f["escala"] else ""
+    esc_en = (" " + frase_escala(f, "en")) if f["escala"] else ""
     resumo = (
-        "Este trabalho tem como objetivo comparar, de forma quantitativa, o desempenho e a manutenibilidade de "
-        "sistemas de software estruturados em três padrões arquiteturais: Monólito, Arquitetura em Camadas (MVC) e "
-        "Clean Architecture. A metodologia consiste em um protótipo tripartido, no qual a mesma aplicação de "
-        "gerenciamento de tarefas é desenvolvida três vezes, mantendo constantes o domínio, a linguagem "
-        "(TypeScript com Node.js), o banco de dados (PostgreSQL) e a infraestrutura de execução (Docker, em um "
-        "único hospedeiro), com carga gerada pelo autocannon e métricas coletadas da mesma forma em cada versão. "
-        f"Em quatro cenários, com {f['n']} rodadas cada, não houve diferença detectável de desempenho na leitura e "
-        f"no cenário misto; na criação de tarefas, o módulo único alcançou {br(ta, 0)} req/s contra {br(tc, 0)} da "
-        f"Clean Architecture (p = {pval(f['p_criar'])}). Na estrutura do código, os mesmos testes cobriram "
-        f"{pct(cn['monolito'])} da regra de negócio no módulo único, {pct(cn['camadas'])} em camadas e "
-        f"{pct(cn['clean'])} na Clean Architecture, cuja camada de domínio não importa nenhum framework (contra "
-        f"{pct(it['camadas'])} em camadas), enquanto o acoplamento medido por fan-out cresceu com o número de "
-        "camadas. Os resultados se limitam a uma aplicação pequena em um único hospedeiro.")
+        "Este trabalho compara, de forma quantitativa, o desempenho, a escalabilidade e a manutenibilidade de três "
+        "formas de estruturar internamente uma mesma aplicação monolítica: módulo único, Arquitetura em Camadas (MVC) "
+        "e Clean Architecture. Monólito descreve a implantação, comum às três; a variável estudada é a estruturação "
+        "interna. Um protótipo tripartido implementa a mesma aplicação de gerenciamento de tarefas três vezes, com "
+        "domínio, linguagem (TypeScript com Node.js), banco (PostgreSQL) e infraestrutura (Docker, em um único "
+        "hospedeiro) constantes e carga gerada pelo autocannon. "
+        f"Em quatro cenários, com {f['n']} rodadas cada, não houve diferença detectável na leitura e no cenário "
+        f"misto; na criação de tarefas, o módulo único alcançou {br(ta, 0)} req/s contra {br(tc, 0)} da Clean "
+        f"Architecture (p = {pval(f['p_criar'])}).{esc_pt} Os mesmos testes cobriram {pct(cn['monolito'])} da regra "
+        f"de negócio no módulo único, {pct(cn['camadas'])} em camadas e {pct(cn['clean'])} na Clean Architecture, "
+        f"cujo domínio não importa nenhum framework (contra {pct(it['camadas'])} em camadas), mas o acoplamento "
+        "medido por fan-out cresceu com o número de camadas. Os resultados se limitam a uma aplicação pequena em um "
+        "único hospedeiro.")
     abstract = (
-        "This work aims to compare, quantitatively, the performance and maintainability of software systems "
-        "structured in three architectural patterns: Monolith, Layered Architecture (MVC) and Clean Architecture. "
-        "The methodology is a tripartite prototype, in which the same task management application is developed "
-        "three times, keeping the domain, the language (TypeScript with Node.js), the database (PostgreSQL) and "
-        "the execution infrastructure (Docker, on a single host) constant, with load generated by autocannon and "
-        "metrics collected the same way in every version. In four scenarios, with "
-        f"{f['n']} rounds each, no detectable performance difference was found for reads and for the mixed "
-        f"scenario; when creating tasks, the single module reached {br(ta, 0)} req/s against {br(tc, 0)} for "
-        f"Clean Architecture (p = {pval(f['p_criar'])}). Regarding code structure, the same tests covered "
-        f"{pct(cn['monolito'])} of the business logic in the single module, {pct(cn['camadas'])} in layers and "
-        f"{pct(cn['clean'])} in Clean Architecture, whose domain layer imports no framework (versus "
-        f"{pct(it['camadas'])} in layers), while coupling measured by fan-out grew with the number of layers. "
-        "The results are limited to a small application on a single host.")
+        "This work quantitatively compares the performance, scalability and maintainability of three ways of "
+        "internally structuring the same monolithic application: single module, Layered Architecture (MVC) and "
+        "Clean Architecture. Monolith describes the deployment, shared by all three; the studied variable is the "
+        "internal structure. A tripartite prototype implements the same task management application three times, "
+        "keeping domain, language (TypeScript with Node.js), database (PostgreSQL) and infrastructure (Docker, on a "
+        f"single host) constant, with load generated by autocannon. In four scenarios, with {f['n']} rounds each, "
+        "no detectable difference was found for reads and for the mixed scenario; when creating tasks, the single "
+        f"module reached {br(ta, 0)} req/s against {br(tc, 0)} for Clean Architecture (p = {pval(f['p_criar'])}).{esc_en} "
+        f"The same tests covered {pct(cn['monolito'])} of the business logic in the single module, "
+        f"{pct(cn['camadas'])} in layers and {pct(cn['clean'])} in Clean Architecture, whose domain imports no "
+        f"framework (versus {pct(it['camadas'])} in layers), but coupling measured by fan-out grew with the number "
+        "of layers. The results are limited to a small application on a single host.")
     assert len(resumo.split()) <= 250 and len(abstract.split()) <= 250, (len(resumo.split()), len(abstract.split()))
     return resumo, abstract
 
 
 INTRO_1 = (
-    "A transformação digital ampliou a demanda sobre a arquitetura dos sistemas de software, que precisam "
-    "sustentar grande volume de solicitações simultâneas e disponibilidade constante. A escolha do padrão "
-    "arquitetural é uma decisão estratégica, pois afeta a evolução, a manutenção e a escalabilidade do sistema "
-    "durante todo o seu ciclo de vida (Garlan; Shaw, 1993). Padrões como a Arquitetura em Camadas, difundida no "
-    "modelo MVC (*Model-View-Controller*), e a Clean Architecture (Martin, 2017) favorecem a divisão de "
-    "responsabilidades, a testabilidade e a independência de tecnologias externas.")
+    "O monólito é a forma de implantação mais comum de aplicações corporativas: um único artefato executável com "
+    "um banco de dados. Monólito descreve, portanto, a organização e a implantação do sistema, e não a sua "
+    "estrutura interna. Dentro dele, o código pode ser estruturado de formas diferentes, e essa estruturação afeta "
+    "a evolução e a manutenção do sistema durante todo o seu ciclo de vida (Garlan; Shaw, 1993). A Arquitetura em "
+    "Camadas, difundida no modelo MVC (*Model-View-Controller*), e a Clean Architecture (Martin, 2017) são "
+    "abordagens de estruturação interna e podem ser aplicadas a uma aplicação monolítica; a alternativa mínima é "
+    "concentrar tudo em um único módulo (Fowler, 2002).")
 INTRO_2 = (
-    "Escolher o padrão que ofereça o melhor equilíbrio entre facilidade de implementação, manutenibilidade e "
-    "escalabilidade em sistemas de médio porte é o problema central desta pesquisa. Essa escolha costuma se "
-    "apoiar em preferências pessoais, modismos ou relatos anedóticos (Fowler, 2002), o que gera decisões "
-    "subótimas, dívida técnica e custos crescentes de manutenção (Newman, 2015). Blinowski, Ojdowska e "
-    "Przybylek (2022) mostraram que, em máquina única, o monólito supera os microsserviços em latência, o que "
-    "reforça a necessidade de medição rigorosa. Nas fontes revisadas (Seção 3.2), não foram encontrados estudos "
-    "que comparem os três padrões sob as mesmas condições operacionais.")
+    "Escolher a estruturação interna que ofereça o melhor equilíbrio entre facilidade de implementação, "
+    "manutenibilidade e escalabilidade costuma se apoiar em preferências pessoais e relatos anedóticos (Fowler, "
+    "2002), e a literatura empírica se concentra em outro eixo, o do monólito contra os microsserviços "
+    "(Blinowski; Ojdowska; Przybylek, 2022). Nas fontes revisadas (Seção 3.2), não foram encontrados estudos que "
+    "comparem experimentalmente essas formas de estruturação interna sob as mesmas condições operacionais.")
 INTRO_3 = (
-    "O objetivo deste trabalho é analisar quantitativamente o desempenho e a manutenibilidade de sistemas "
-    "construídos segundo os três padrões, por meio de um protótipo funcional tripartido executado em contêineres "
-    "Docker, com métricas coletadas de forma idêntica em cada versão.")
+    "O objetivo deste trabalho é analisar quantitativamente o desempenho, a escalabilidade e a manutenibilidade de "
+    "uma mesma aplicação monolítica estruturada de três formas (módulo único, camadas e Clean Architecture), por "
+    "meio de um protótipo tripartido executado em contêineres Docker, com métricas coletadas de forma idêntica em "
+    "cada versão.")
 
 TEORIA_1 = (
     "A arquitetura de software estabelece a organização de um sistema por meio de decisões estruturais e "
     "princípios de projeto. Garlan e Shaw (1993) a definem como o estudo da organização global dos componentes, "
     "de suas interações e dos princípios que governam o projeto e a evolução do sistema; para Bass, Clements e "
     "Kazman (2012), é o conjunto de estruturas necessárias para raciocinar sobre o sistema, seus elementos e as "
-    "relações entre eles. O modelo monolítico, que reúne interface, lógica de negócio e persistência em um único "
-    "artefato implantável, é historicamente o mais utilizado: proporciona baixa latência em contextos de baixa "
-    "complexidade, mas limita o escalonamento seletivo e amplia o acoplamento à medida que o sistema cresce "
-    "(Dragoni *et al.*, 2017).")
+    "relações entre eles. É preciso distinguir dois níveis. O monólito descreve a forma de implantação, em que "
+    "interface, lógica de negócio e persistência formam um único artefato implantável, em oposição à implantação "
+    "distribuída em microsserviços (Dragoni *et al.*, 2017). A estruturação interna descreve como o código desse "
+    "artefato se organiza, e é nela que atuam a Arquitetura em Camadas (MVC) e a Clean Architecture. Por isso "
+    "essas abordagens não são alternativas excludentes ao monólito: uma aplicação monolítica pode adotar qualquer "
+    "uma delas.")
 TEORIA_2 = (
     "A Arquitetura em Camadas, popularizada pelo MVC, reduz o acoplamento por meio da separação horizontal entre "
     "apresentação, lógica de negócio e persistência, melhorando a organização do código e facilitando a "
     "escalabilidade (Tu, 2023). A Clean Architecture (Martin, 2017) isola as regras de negócio no núcleo de "
     "camadas concêntricas e aplica o princípio da inversão de dependências, o que favorece a testabilidade e a "
-    "independência tecnológica.")
+    "independência tecnológica. O módulo único, sem separação de responsabilidades, serve de linha de base.")
 RELACIONADOS_1 = (
     "A comparação empírica entre padrões arquiteturais é uma linha de investigação estabelecida, porém "
     "concentrada no eixo monólito–microsserviços. O trabalho metodologicamente mais próximo é o de Blinowski, "
@@ -389,9 +428,9 @@ RELACIONADOS_2 = (
     "*et al.* (2023) analisaram 35 estudos sobre decomposição de monólitos e concluíram que o tema permanece em "
     "estágio inicial de maturidade; e Velepucha e Flores (2023) sistematizaram princípios e desafios de "
     "migração. A literatura compara majoritariamente monólitos e microsserviços, sem considerar a Clean "
-    "Architecture como alternativa estruturalmente coesa (Richards, 2015). Nenhum dos estudos identificados a "
-    "avalia empiricamente em comparação controlada com o monólito e com a Arquitetura em Camadas, sob "
-    "identidade funcional, de linguagem e de infraestrutura, lacuna em que se insere este trabalho.")
+    "Architecture como alternativa estruturalmente coesa (Richards, 2015). Nenhum dos estudos identificados "
+    "compara, sob identidade funcional, de linguagem e de infraestrutura, formas de estruturação interna de uma "
+    "mesma aplicação monolítica, lacuna em que se insere este trabalho.")
 
 REFERENCIAS = [
     "ABGAZ, Y. *et al.* Decomposition of monolith applications into microservices architectures: a systematic "
@@ -452,7 +491,7 @@ def tabela_codigo(d, f):
 def tabela_escala(d):
     linhas = [["Condição", "A", "B", "C", "p"]]
     for c, x in CARGA:
-        linhas.append([f"{x} conexões (req/s)",
+        linhas.append([f"{x} {'conexão' if x == 1 else 'conexões'} (req/s)",
                        *[br(media(d, "carga", c, "throughput_rps", a), 0) for a in ARQS],
                        pval(teste(d, "carga", c, "throughput_rps")["p"])])
     for c, x in VERT:
@@ -470,10 +509,10 @@ def construir(sem_autores, saida):
     doc, sec = novo_documento(sem_autores)
     esc = Escritor(doc)
     cabecalho(doc, sec, esc)
-    esc.para("COMPARATIVO ARQUITETURAL: MONÓLITO, ARQUITETURA EM CAMADAS (MVC) E CLEAN ARCHITECTURE EM SISTEMAS "
-             "ESCALÁVEIS", align=C, indent=False, bold=True, spacing=1.0, before=6, after=8)
-    esc.para("ARCHITECTURAL COMPARISON: MONOLITH, LAYERED ARCHITECTURE (MVC) AND CLEAN ARCHITECTURE IN SCALABLE "
-             "SYSTEMS", align=C, indent=False, bold=True, spacing=1.0, after=10)
+    esc.para("ESTRUTURAÇÃO INTERNA DE APLICAÇÕES MONOLÍTICAS: COMPARAÇÃO ENTRE MÓDULO ÚNICO, ARQUITETURA EM CAMADAS "
+             "(MVC) E CLEAN ARCHITECTURE", align=C, indent=False, bold=True, spacing=1.0, before=6, after=8)
+    esc.para("INTERNAL STRUCTURING OF MONOLITHIC APPLICATIONS: A COMPARISON OF SINGLE MODULE, LAYERED "
+             "ARCHITECTURE (MVC) AND CLEAN ARCHITECTURE", align=C, indent=False, bold=True, spacing=1.0, after=10)
     if not sem_autores:
         bloco_autores(doc, esc)
     esc.para(f"**RESUMO:** {resumo}", indent=False, spacing=1.0, size=11)
@@ -492,25 +531,32 @@ def construir(sem_autores, saida):
     esc.h1("2 METODOLOGIA")
     esc.para(
         "A pesquisa adota a implementação de um protótipo tripartido: a mesma aplicação de gerenciamento de "
-        "tarefas é desenvolvida três vezes, cada versão seguindo um padrão (A: Monólito, em módulo único; B: "
-        "Arquitetura em Camadas/MVC; C: Clean Architecture). Assim, o padrão arquitetural é a variável "
-        "independente, enquanto o domínio de negócio, a linguagem (TypeScript com Node.js), o banco de dados "
-        "(PostgreSQL) e a infraestrutura de execução (Docker) permanecem constantes. Cada versão contempla API "
-        "REST, regras de negócio para tarefas, autenticação por *JSON Web Tokens* (JWT) e persistência em "
-        "PostgreSQL, diferindo apenas na organização do código-fonte e na distribuição de responsabilidades. A "
-        "equivalência funcional é verificada por um teste que executa o mesmo roteiro HTTP nas três versões e "
-        "exige respostas idênticas.")
+        "tarefas é desenvolvida três vezes, sempre implantada como monólito, e cada versão tem uma estruturação "
+        "interna: A (módulo único, com requisição, regra de negócio e acesso a dados no mesmo módulo), B "
+        "(Arquitetura em Camadas/MVC, com controllers, services e repositories) e C (Clean Architecture, com "
+        "domínio independente de frameworks, portas e adaptadores). Assim, a estruturação interna é a variável "
+        "independente, enquanto a forma de implantação, o domínio de negócio, a linguagem (TypeScript com "
+        "Node.js), o banco de dados (PostgreSQL) e a infraestrutura de execução (Docker) permanecem constantes. "
+        "Cada versão contempla API REST, regras de negócio para tarefas, autenticação por *JSON Web Tokens* (JWT) "
+        "e persistência em PostgreSQL. A equivalência funcional é verificada por um teste que executa o mesmo "
+        "roteiro HTTP nas três versões e exige respostas idênticas.")
+    fases = ("executa quatro cenários (listar, buscar, criar e misto) com 10 conexões simultâneas"
+             + ("; a escalabilidade é avaliada com carga crescente (1, 10, 25, 50 e 100 conexões na listagem) e com "
+                "0,5, 1 e 2 vCPU por API (25 conexões)" if f["escala"] else ""))
     esc.para(
         f"Cada versão é executada em um contêiner Docker próprio e tem seu banco PostgreSQL 16 em outro "
-        f"contêiner, todos com o mesmo limite de 1 vCPU e 512 MB, em um único hospedeiro ({so}, "
-        f"{meta['host']['cpus_logicas']} processadores lógicos, Docker {meta['docker']}), conforme a Figura 1. O "
-        "gerador de carga autocannon, no mesmo hospedeiro, executa quatro cenários (listar, buscar, criar e "
-        f"misto) com 10 conexões simultâneas, 3 s de aquecimento e 10 s de medição, em {f['n']} rodadas com a "
-        "ordem das versões rotacionada a cada rodada. Tempo de resposta e *throughput* são medidos pelo gerador, "
-        "e o consumo de CPU por requisição é lido de cada API. Indicadores de qualidade de código, como "
-        "cobertura de testes, dependências entre módulos e linhas de código por camada, complementam a análise. "
-        "A diferença entre as versões é testada com o teste de Kruskal-Wallis (Kruskal; Wallis, 1952), adequado a "
-        f"amostras de tamanho {f['n']} sem suposição de normalidade, com nível de significância de 0,05.")
+        f"contêiner, todos com o mesmo limite de 1 vCPU e 512 MB (exceto na escala vertical), em um único "
+        f"hospedeiro ({so}, {meta['host']['cpus_logicas']} processadores lógicos, Docker {meta['docker']}), "
+        f"conforme a Figura 1. O gerador de carga autocannon, no mesmo hospedeiro, {fases}. Cada condição tem 3 s "
+        f"de aquecimento, 10 s de medição e {f['n']} rodadas com a ordem das versões rotacionada a cada rodada"
+        + (f", totalizando {f['medicoes']} medições" if f["escala"] else "")
+        + ". Tempo de resposta e *throughput* são medidos pelo gerador, e o consumo de CPU por requisição é lido "
+        "de cada API. Indicadores de qualidade de código, como cobertura de testes, dependências entre módulos e "
+        "linhas de código por camada, complementam a análise. A diferença entre as versões é testada com o teste "
+        f"de Kruskal-Wallis (Kruskal; Wallis, 1952), adequado a amostras de tamanho {f['n']} sem suposição de "
+        "normalidade, com nível de significância de 0,05"
+        + (" e correção de Bonferroni dentro de cada grupo de condições (quatro cenários; oito condições de "
+           "escalabilidade)." if f["escala"] else " e correção de Bonferroni para os quatro cenários."))
     esc.legenda("**Figura 1 –** Ambiente experimental e instrumentação da coleta de métricas")
     fig = Path(tempfile.gettempdir()) / "ambiente_experimental.png"
     renderizar_ambiente(fig)
@@ -527,13 +573,16 @@ def construir(sem_autores, saida):
 
     esc.h1("4 RESULTADOS E DISCUSSÃO")
     ta, tb, tc = (f["tp_criar"][a] for a in ARQS)
+    n_cod = "3" if f["escala"] else "2"
     esc.para(
         "A implementação das três versões foi concluída, e os mesmos oito casos de teste de unidade passam em "
-        "todas. Os resultados dos cenários de carga estão na Tabela 1 e os indicadores de código na Tabela 2.")
+        "todas. Os resultados dos cenários estão na Tabela 1, "
+        + ("os de escalabilidade na Tabela 2 e " if f["escala"] else "")
+        + f"os indicadores de código na Tabela {n_cod}.")
     esc.legenda(f"**Tabela 1 –** Cenários de carga (média ± desvio-padrão, n = {f['n']}; 10 conexões; 1 vCPU) e "
                 "valor p de Kruskal-Wallis")
     esc.tabela(tabela_cenarios(d), (2.0, 2.6, 3.1, 3.1, 3.1, 1.6), tam=8.5, alinhar_esq=(0, 1))
-    esc.fonte("Elaborado pelos autores (2026). A: módulo único; B: camadas; C: Clean Architecture.")
+    esc.fonte("Elaborado pelos autores (2026). A: módulo único; B: camadas (MVC); C: Clean Architecture.")
     esc.para(
         f"Nos cenários de leitura (listar e buscar) e no misto, não houve diferença detectável entre as versões "
         f"(p ≥ {br(f['p_leitura_min'], 2)}), mas o coeficiente de variação do *throughput* chegou a "
@@ -541,10 +590,37 @@ def construir(sem_autores, saida):
         f"foi a criação de tarefas, medida com baixa variação (CV ≤ {br(f['cv_criar_max'], 0)}%): o módulo único "
         f"teve o maior *throughput* ({br(ta, 0)} req/s), seguido de Camadas ({br(tb, 0)}) e Clean Architecture "
         f"({br(tc, 0)}), diferença de {br(f['queda_criar_pct'], 1)}% entre os extremos (p = "
-        f"{pval(f['p_criar'])}), com o custo de CPU por requisição na mesma ordem. A hipótese de menor latência do "
-        "monólito em baixa carga, derivada de Blinowski, Ojdowska e Przybylek (2022), confirmou-se, portanto, "
-        "apenas na escrita e com efeito pequeno.")
-    esc.legenda("**Tabela 2 –** Indicadores de qualidade de código das três versões")
+        f"{pval(f['p_criar'])}, abaixo do limiar de Bonferroni de {br(0.05 / len(CEN), 3)} para os quatro "
+        f"cenários), com o custo de CPU por requisição na mesma ordem. A expectativa de que a "
+        "estrutura mais simples teria menor custo de processamento, em linha com o achado de Blinowski, Ojdowska "
+        "e Przybylek (2022) sobre a menor comunicação, confirmou-se, portanto, apenas na escrita e com efeito "
+        "pequeno.")
+    if f["escala"]:
+        esc.legenda(f"**Tabela 2 –** *Throughput* (req/s, média, n = {f['n']}) sob carga crescente (1 vCPU) e escala "
+                    "vertical (25 conexões)")
+        esc.tabela(tabela_escala(d), (5.0, 2.8, 2.8, 2.8, 1.6), tam=8.5)
+        esc.fonte()
+        sp, rz = f["speedup2"], f["razao100"]
+        esc.para(
+            f"Com a carga crescendo de 10 para 100 conexões, o *throughput* foi multiplicado por "
+            f"{br(rz['monolito'], 2)}, {br(rz['camadas'], 2)} e {br(rz['clean'], 2)} nas versões A, B e C. Ao "
+            f"dobrar a CPU de 1 para 2 vCPU, foi multiplicado por {br(sp['monolito'], 2)}, {br(sp['camadas'], 2)} e "
+            f"{br(sp['clean'], 2)}. "
+            + ("Não houve diferença significativa entre as versões em nenhuma das " if f["esc_sig"] == 0
+               else f"Houve diferença significativa em {f['esc_sig']} das ")
+            + f"{f['esc_total']} condições de escalabilidade; não se detectou, portanto, efeito da estruturação "
+            "interna sobre a resposta a mais carga ou a mais CPU nas condições testadas, o que não equivale a provar "
+            "que o efeito não existe."
+            if f["esc_sig"] == 0 else
+            f"Com a carga crescendo de 10 para 100 conexões, o *throughput* foi multiplicado por "
+            f"{br(rz['monolito'], 2)}, {br(rz['camadas'], 2)} e {br(rz['clean'], 2)} nas versões A, B e C. Ao "
+            f"dobrar a CPU de 1 para 2 vCPU, foi multiplicado por {br(sp['monolito'], 2)}, {br(sp['camadas'], 2)} e "
+            f"{br(sp['clean'], 2)}. Houve diferença significativa em {f['esc_sig']} das {f['esc_total']} condições "
+            f"de escalabilidade ({f['esc_txt']}), mas "
+            + ("ela resiste" if f["esc_sobrevive"] else "ela não resiste")
+            + f" à correção de Bonferroni para {f['esc_total']} comparações (limiar de {br(f['esc_bonf'], 3)}). O "
+            f"coeficiente de variação do *throughput* nessas condições chegou a {br(f['cv_escala_max'], 0)}%.")
+    esc.legenda(f"**Tabela {n_cod} –** Indicadores de qualidade de código das três versões")
     esc.tabela(tabela_codigo(d, f), (7.4, 2.6, 2.6, 2.6), tam=8.5)
     esc.fonte("Elaborado pelos autores (2026). Cobertura dos mesmos oito casos de teste, sem banco de dados.")
     esc.para(
@@ -557,26 +633,20 @@ def construir(sem_autores, saida):
         f"{pct(f['infra']['clean'])} na Clean Architecture. A testabilidade, medida pela cobertura da camada de "
         f"negócio com os mesmos testes, foi de {pct(f['cob_negocio']['monolito'])}, "
         f"{pct(f['cob_negocio']['camadas'])} e {pct(f['cob_negocio']['clean'])}, respectivamente.")
-    if f["escala"]:
-        sig = [x for x in [("carga", c) for c, _ in CARGA] + [("vertical", c) for c, _ in VERT]
-               if teste(d, x[0], x[1], "throughput_rps")["p"] < 0.05]
-        esc.para(
-            "A Tabela 3 traz o *throughput* sob carga crescente e com mais CPU. " +
-            (f"Houve diferença significativa em {len(sig)} das {len(CARGA) + len(VERT)} condições."
-             if sig else f"Não houve diferença significativa em nenhuma das {len(CARGA) + len(VERT)} condições."))
-        esc.legenda("**Tabela 3 –** *Throughput* (req/s, média, n = 5) sob carga crescente e escala vertical")
-        esc.tabela(tabela_escala(d), (5.0, 2.8, 2.8, 2.8, 1.6), tam=8.5)
-        esc.fonte()
 
     esc.h1("5 CONSIDERAÇÕES FINAIS")
     esc.para(
-        "Em relação ao objetivo proposto, as três versões foram implementadas, verificadas como funcionalmente "
-        "equivalentes e comparadas. Nas condições medidas, o desempenho foi equivalente na leitura e até "
-        f"{br(f['queda_criar_pct'], 1)}% menor na escrita das versões mais estruturadas, enquanto a camada de "
-        "negócio de Camadas e da Clean Architecture teve cobertura maior e, na Clean Architecture, nenhuma "
-        "dependência de frameworks; o acoplamento entre módulos, por outro lado, cresceu com o número de camadas. "
-        "Os resultados têm validade limitada: o gerador de carga e as APIs dividem o mesmo hospedeiro, a "
-        f"aplicação é pequena, cada padrão foi implementado uma vez e há apenas {f['n']} rodadas por condição.")
+        "Em relação ao objetivo proposto, as três estruturações internas de uma mesma aplicação monolítica foram "
+        "implementadas, verificadas como funcionalmente equivalentes e comparadas. Nas condições medidas, não se "
+        f"detectou diferença de desempenho na leitura, e o throughput de escrita foi até "
+        f"{br(f['queda_criar_pct'], 1)}% menor nas versões mais estruturadas"
+        + (", sem diferença detectável de escalabilidade de carga e de CPU" if f["escala"] and f["esc_sig"] == 0 else "")
+        + (f"; na escalabilidade, a diferença significativa ({f['esc_txt']}) não resiste à correção de Bonferroni"
+           if f["escala"] and f["esc_sig"] > 0 and not f["esc_sobrevive"] else "")
+        + "; a camada de negócio de Camadas e da Clean Architecture teve cobertura maior e, na Clean Architecture, "
+        "nenhuma dependência de frameworks, enquanto o acoplamento entre módulos cresceu com o número de camadas. "
+        "Os resultados têm validade limitada: o gerador de carga e as APIs dividem o mesmo hospedeiro, a aplicação "
+        f"é pequena, cada estruturação foi implementada uma vez e há apenas {f['n']} rodadas por condição.")
     esc.para(
         "Como trabalhos futuros, propõem-se avaliar a escalabilidade horizontal, repetir o estudo com outras "
         "implementações e aplicações maiores e incluir pipelines de integração e entrega contínua (CI/CD) para "
