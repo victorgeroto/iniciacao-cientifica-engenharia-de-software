@@ -216,7 +216,7 @@ LOCAL = AQUI / "autores.local.json"  # dados pessoais: ignorado pelo git, nunca 
 
 
 def dados_locais():
-    """Lê ORCID, CPF e e-mail de autores.local.json; campos vazios continuam como [preencher]."""
+    """Lê ORCID e e-mail de autores.local.json; campos vazios continuam como [preencher]."""
     if not LOCAL.exists():
         return {}
     return json.loads(LOCAL.read_text(encoding="utf-8"))
@@ -231,11 +231,8 @@ def bloco_autores(doc, esc, dados=None):
         orcid = orcid if orcid.startswith("http") or orcid == PH else f"https://orcid.org/{orcid}"
         if orcid == PH:
             orcid = f"https://orcid.org/{PH}"
-        cpf = x.get("cpf", "")
-        linhas = [nome, f"ORCID: {orcid}"]
-        if cpf is not False:  # "cpf": false em autores.local.json omite a linha (o CPF vai só no perfil do sistema)
-            linhas.append(f"CPF: {cpf or PH}")
-        linhas += [INST, f"e-mail: {x.get('email') or PH}"]
+        # O CPF não consta do documento: é informado só no perfil do sistema, por quem faz a submissão.
+        linhas = [nome, f"ORCID: {orcid}", INST, f"e-mail: {x.get('email') or PH}"]
         for i, ln in enumerate(linhas):
             p = cel.paragraphs[0] if (primeiro and i == 0) else cel.add_paragraph()
             p.alignment = C

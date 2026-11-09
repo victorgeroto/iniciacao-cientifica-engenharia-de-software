@@ -14,7 +14,7 @@
 | Item | Situação |
 |---|---|
 | Manuscrito no template REX | ✅ Corrigido conforme as marcações do professor — 8 páginas |
-| Campos pessoais do bloco de autores (ORCID, CPF, e-mail) | ⬜ A preencher localmente; **não versionar** |
+| Campos pessoais do bloco de autores (ORCID e e-mail) | ⬜ A preencher localmente; **não versionar** |
 | Revisão dos orientadores | ⬜ Pendente |
 | Submissão no sistema | ⬜ **Não realizada** |
 | Data da submissão / código de confirmação | — (a preencher após o envio) |
@@ -71,7 +71,7 @@ O manuscrito foi escrito no template **"template_artigo 2024"**, indicado pela a
 | Fonte e espaçamento | Arial 12, espaço 1,5, texto justificado, primeira linha com recuo de 1,25 cm; referências, legendas e fontes em espaço simples |
 | Margens | 3 cm (superior e esquerda) e 2 cm (inferior e direita) |
 | Páginas | Sem numeração |
-| Primeira página | Título em português e em inglês, bloco de autores (nome, ORCID, CPF, instituição, e-mail), Resumo (211 palavras, limite de 250, parágrafo único), palavras-chave (5, em ordem alfabética, sem repetir termos do título), Abstract e Keywords |
+| Primeira página | Título em português e em inglês, bloco de autores (nome, ORCID, instituição, e-mail), Resumo (211 palavras, limite de 250, parágrafo único), palavras-chave (5, em ordem alfabética, sem repetir termos do título), Abstract e Keywords |
 | Estrutura | 1 Introdução (com problema e objetivo no final), 2 Metodologia, 3 Referencial teórico, 4 Resultados e discussão, 5 Considerações finais, Referências bibliográficas, nessa ordem |
 | Introdução | 1.522 caracteres (limite de 2.500) |
 | Ilustrações | Legenda acima em negrito, fonte abaixo em Arial 10; quadro em tabela nativa do Word, sem sombreado e sem linhas verticais |
@@ -86,7 +86,7 @@ O template e as Diretrizes se contradizem em pontos que afetam a submissão. Nes
 | Fonte | Arial 12 | Times New Roman 12 | Template |
 | Margens inferior e direita | 2 cm | 2,5 cm | Template |
 | Referências e citações | ABNT | APA | Template (os dois REX de 2024 consultados também usam ABNT) |
-| Autores no arquivo | Bloco com ORCID, CPF e e-mail na primeira página | Arquivo sem nomes nem filiação | Duas versões (ver abaixo) |
+| Autores no arquivo | Bloco com ORCID, CPF e e-mail na primeira página (o manuscrito **omite o CPF**, que é informado só no perfil do sistema) | Arquivo sem nomes nem filiação | Duas versões (ver abaixo) |
 | Número de páginas | 10 a 20 | REX: 5 a 8 | **Diretrizes** (6 páginas); o limite do template é o de uma revista, e os REX de 2024 têm 8 páginas |
 
 As Diretrizes também afirmam que os templates valem para a **primeira página**, e que as demais seguem as recomendações gerais. A forma segura de decidir é **perguntar à coordenação** (contecsiusp@gmail.com), junto com o pedido do template oficial do 21º.
@@ -95,10 +95,10 @@ As Diretrizes também afirmam que os templates valem para a **primeira página**
 
 | Arquivo | Uso |
 |---|---|
-| `template_artigo_2024_comparativo_arquitetural.docx` | Template completo, **com** bloco de autores. ORCID, CPF e e-mail aparecem como `[preencher]` |
+| `template_artigo_2024_comparativo_arquitetural.docx` | Template completo, **com** bloco de autores. ORCID e e-mail aparecem como `[preencher]` |
 | `template_artigo_2024_comparativo_arquitetural_sem-autores.docx` | Mesmo texto **sem** o bloco de autores, para o caso de o sistema exigir avaliação sem identificação |
 
-ORCID, CPF e e-mail **não estão no repositório de propósito**. Preencha no `.docx` local antes de enviar e não faça commit dessa versão.
+ORCID e e-mail **não estão no repositório de propósito**. Preencha no `.docx` local antes de enviar e não faça commit dessa versão.
 
 ---
 
@@ -185,7 +185,7 @@ As Diretrizes do 21º CONTECSI exigem que trechos produzidos com IA fiquem entre
 | 1 | Confirmar REX e a lista e ordem de autores com Deivison Takatu e Glauco Todesco | Aluno |
 | 2 | Enviar o manuscrito aos orientadores para revisão | Aluno |
 | 3 | Perguntar à coordenação qual formato vale (template × Diretrizes) e pedir o template REX do 21º | Aluno |
-| 4 | Preencher ORCID, CPF e e-mail no `.docx` local (sem commit) | Aluno e orientadores |
+| 4 | Preencher ORCID e e-mail no `.docx` local (sem commit) | Aluno e orientadores |
 | 5 | Definir a declaração de uso de IA | Aluno e orientadores |
 | 6 | Cadastrar-se no sistema, marcar o perfil "Autor" e submeter pelos 5 passos | Aluno |
 | 7 | Registrar aqui a data e o código de 4 dígitos da submissão | Aluno |

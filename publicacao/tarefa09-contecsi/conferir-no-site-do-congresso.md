@@ -18,7 +18,7 @@ https://contecsi.tecsi.org/index.php/contecsi/21CONTECSI/
 | Sessão do REX | "GRADUATION – EXTENDED ABSTRACT" | Políticas das Modalidades |
 | Tipo de sessão (tema) | **09 – ESD** (Engenharia e Desenvolvimento de Software e Hardware) | Passo 1 da submissão |
 | Limites | até 3 trabalhos por autor; até 4 autores (o principal e mais 3) | Diretrizes |
-| Obrigatório | ORCID de **todos** os autores; CPF do responsável pela submissão | Diretrizes |
+| Obrigatório | ORCID de **todos** os autores; CPF do responsável pela submissão, **informado no perfil do sistema** (não consta do documento) | Diretrizes |
 | Formato do arquivo | Word; **REX, POS e TIN podem ser PDF** | Diretrizes |
 | Uso de IA | trechos entre aspas, com a IA identificada, conforme **Portaria CNPq nº 2.664/2026** | Diretrizes |
 | Publicação nos anais | exige que **ao menos um autor esteja inscrito (pagante)** e que o trabalho seja apresentado | Diretrizes, item C |
@@ -35,7 +35,7 @@ https://contecsi.tecsi.org/index.php/contecsi/21CONTECSI/
 | 3 | **Em qual dia o REX será apresentado** (01/12 presencial ou 02–04/12 virtual) | Programa, ou coordenação | Define se você precisa estar em São Paulo |
 | 4 | **Inscrição: valor, gratuidade para graduandos e abertura** | Item "D – Inscrição e pagamento" | Sem inscrição de um autor, o trabalho não entra nos anais |
 | 5 | **Se o arquivo do REX deve ir sem nomes dos autores** | Coordenação | As Diretrizes pedem arquivo sem identificação, mas o REX tem template próprio, e os REX de 2024 traziam os autores na primeira página. Por isso existem as duas versões do manuscrito |
-| 6 | **ORCID dos três autores, CPF e e-mails** | Seus cadastros em orcid.org; pedir aos orientadores | Obrigatórios. **Não vão para o repositório** |
+| 6 | **ORCID e e-mails dos três autores** | Seus cadastros em orcid.org; pedir aos orientadores | Obrigatórios. **Não vão para o repositório** |
 | 7 | **Perfil com a caixa "AUTOR" marcada** | Meu Perfil, no fim da página | Sem ela o sistema não deixa submeter |
 
 ## 3. Pontos de atenção
