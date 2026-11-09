@@ -325,6 +325,88 @@ def figuras(resumo, mudancas):
         plt.close(fig)
 
 
+
+# ---------------------------------------------------------------- speedup e figuras do manuscrito
+
+def speedup_vertical(resumo):
+    """Speedup do throughput em relação a 1 vCPU e eficiência de escala (speedup / razão de CPU)."""
+    idx = {(r["condicao"], r["metrica"], r["arquitetura"]): r for r in resumo if r["fase"] == "vertical"}
+    linhas = []
+    for a in ARQS:
+        base = idx.get(("cpu1.0", "throughput_rps", a))
+        if not base:
+            continue
+        for cond, cpus in (("cpu0.5", 0.5), ("cpu1.0", 1.0), ("cpu2.0", 2.0)):
+            r = idx.get((cond, "throughput_rps", a))
+            if r:
+                sp = r["media"] / base["media"]
+                linhas.append({"arquitetura": a, "vcpu": cpus, "throughput_rps": round(r["media"], 1),
+                               "speedup_vs_1vcpu": round(sp, 3), "eficiencia_de_escala": round(sp / cpus, 3)})
+    return linhas
+
+
+def figuras_manuscrito(resumo):
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+    except ImportError:
+        return
+    FIG.mkdir(parents=True, exist_ok=True)
+    plt.rcParams.update({"font.size": 8, "axes.spines.top": False, "axes.spines.right": False, "figure.dpi": 300})
+    idx = {(r["fase"], r["condicao"], r["metrica"], r["arquitetura"]): r for r in resumo}
+
+    def serie(ax, fase, conds, xs, metrica, ylabel, xlabel, logx=False, titulo=""):
+        for a in ARQS:
+            pts = [(x, idx[(fase, c, metrica, a)]) for x, c in zip(xs, conds) if (fase, c, metrica, a) in idx]
+            if not pts:
+                continue
+            ax.errorbar([p[0] for p in pts], [p[1]["media"] for p in pts],
+                        yerr=[p[1]["media"] - p[1]["ic95_inf"] for p in pts], marker=MARCADORES[a], ms=4,
+                        lw=1.2, capsize=2, color=CORES[a], label=NOMES[a])
+        if logx:
+            ax.set_xscale("log")
+            ax.set_xticks(xs, [str(x) for x in xs])
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
+        ax.set_title(titulo, fontsize=8)
+
+    carga = ["c001", "c010", "c025", "c050", "c100"]
+    conns = [1, 10, 25, 50, 100]
+    fig, axs = plt.subplots(1, 3, figsize=(6.3, 2.2))
+    serie(axs[0], "carga", carga, conns, "throughput_rps", "req/s", "conexões", True, "(a) throughput × carga")
+    serie(axs[1], "carga", carga, conns, "latencia_p99_ms", "p99 (ms)", "conexões", True, "(b) latência p99 × carga")
+    serie(axs[2], "vertical", ["cpu0.5", "cpu1.0", "cpu2.0"], [0.5, 1.0, 2.0], "throughput_rps", "req/s", "vCPU por API",
+          False, "(c) escala vertical")
+    axs[2].set_xticks([0.5, 1.0, 2.0])
+    axs[0].legend(frameon=False, fontsize=6.5)
+    fig.tight_layout()
+    fig.savefig(FIG / "fig_escalabilidade.png")
+    plt.close(fig)
+
+    cen = ["list", "get", "create", "mixed"]
+    rot = ["listar", "buscar", "criar", "misto"]
+    fig, axs = plt.subplots(1, 2, figsize=(6.3, 2.2))
+    for ax, metrica, yl, tit in ((axs[0], "throughput_rps", "req/s", "(a) throughput"),
+                                 (axs[1], "cpu_por_req_ms", "ms de CPU por requisição", "(b) custo de CPU")):
+        w = 0.26
+        for i, a in enumerate(ARQS):
+            ys, err = [], []
+            for c in cen:
+                r = idx.get(("cenarios", c, metrica, a))
+                ys.append(r["media"] if r else 0)
+                err.append(r["media"] - r["ic95_inf"] if r else 0)
+            ax.bar([k + (i - 1) * w for k in range(4)], ys, w, yerr=err, capsize=2, color=CORES[a], label=NOMES[a],
+                   hatch=["", "//", ".."][i], edgecolor="white", linewidth=0.4)
+        ax.set_xticks(range(4), rot)
+        ax.set_ylabel(yl)
+        ax.set_title(tit, fontsize=8)
+    axs[0].legend(frameon=False, fontsize=6.5)
+    fig.tight_layout()
+    fig.savefig(FIG / "fig_cenarios.png")
+    plt.close(fig)
+
+
 def gravar(nome, linhas):
     if not linhas:
         return
@@ -344,8 +426,13 @@ def main():
     gravar("desempenho_testes.csv", testes)
     gravar("codigo_dependencia_infra.csv", dependencia_de_infraestrutura())
     meta = BRUTO / "experimento" / "metadados.json"
+    cod = None
     if meta.exists():
-        cod = json.loads(meta.read_text(encoding="utf-8"))["metricas_de_codigo"]
+        cod = json.loads(meta.read_text(encoding="utf-8")).get("metricas_de_codigo")
+    arq_cod = BRUTO / "experimento" / "codigo_metricas.json"  # alternativa: instantâneo do serviço de benchmark
+    if cod is None and arq_cod.exists():
+        cod = json.loads(arq_cod.read_text(encoding="utf-8"))
+    if cod:
         gravar("codigo_metricas.csv", [{
             "arquitetura": c["id"], "arquivos": c["metrics"]["files"], "loc": c["metrics"]["loc"],
             "fanout_medio": c["metrics"]["avgFanOut"], "fanout_max": c["metrics"]["maxFanOut"],
@@ -354,7 +441,9 @@ def main():
             "cobertura_por_camada": json.dumps(c["metrics"]["coverageByLayer"], ensure_ascii=False),
         } for c in cod])
     gravar("mudancas_impacto.csv", mudancas)
+    gravar("escala_vertical_speedup.csv", speedup_vertical(resumo))
     figuras(resumo, mudancas)
+    figuras_manuscrito(resumo)
 
 
 if __name__ == "__main__":
