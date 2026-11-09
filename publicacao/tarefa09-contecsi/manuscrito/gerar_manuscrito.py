@@ -212,9 +212,27 @@ INST = "Centro Universitário SENAI São Paulo – UNISENAI-SP, Campus Sorocaba/
 PH = "[preencher]"
 
 
-def bloco_autores(doc, esc):
-    def autor(cel, nome, primeiro):
-        for i, ln in enumerate((nome, f"ORCID: https://orcid.org/{PH}", f"CPF: {PH}", INST, f"e-mail: {PH}")):
+LOCAL = AQUI / "autores.local.json"  # dados pessoais: ignorado pelo git, nunca versionado
+
+
+def dados_locais():
+    """Lê ORCID, CPF e e-mail de autores.local.json; campos vazios continuam como [preencher]."""
+    if not LOCAL.exists():
+        return {}
+    return json.loads(LOCAL.read_text(encoding="utf-8"))
+
+
+def bloco_autores(doc, esc, dados=None):
+    dados = dados or {}
+
+    def autor(cel, nome, primeiro, chave):
+        x = dados.get(chave, {})
+        orcid = x.get("orcid") or PH
+        orcid = orcid if orcid.startswith("http") or orcid == PH else f"https://orcid.org/{orcid}"
+        if orcid == PH:
+            orcid = f"https://orcid.org/{PH}"
+        linhas = (nome, f"ORCID: {orcid}", f"CPF: {x.get('cpf') or PH}", INST, f"e-mail: {x.get('email') or PH}")
+        for i, ln in enumerate(linhas):
             p = cel.paragraphs[0] if (primeiro and i == 0) else cel.add_paragraph()
             p.alignment = C
             p.paragraph_format.line_spacing = 1.0
@@ -223,9 +241,9 @@ def bloco_autores(doc, esc):
             esc.runs(p, ln, size=8, italic=True)
     ta = doc.add_table(rows=1, cols=2)
     ta.alignment = WD_TABLE_ALIGNMENT.CENTER
-    autor(ta.cell(0, 0), "Victor Hugo Geroto Toledo", True)
-    autor(ta.cell(0, 1), "Orientador: Prof. Me. Deivison Shindi Takatu", True)
-    autor(ta.cell(0, 1), "Orientador: Prof. Dr. Glauco Todesco", False)
+    autor(ta.cell(0, 0), "Victor Hugo Geroto Toledo", True, "victor")
+    autor(ta.cell(0, 1), "Orientador: Prof. Me. Deivison Shindi Takatu", True, "takatu")
+    autor(ta.cell(0, 1), "Orientador: Prof. Dr. Glauco Todesco", False, "todesco")
     esc.para("", spacing=1.0, indent=False, after=4)
 
 
@@ -500,7 +518,7 @@ def tabela_escala(d):
     return linhas
 
 
-def construir(sem_autores, saida):
+def construir(sem_autores, saida, dados=None):
     d = carregar()
     f = fatos(d)
     resumo, abstract = textos(d, f)
@@ -514,7 +532,7 @@ def construir(sem_autores, saida):
     esc.para("INTERNAL STRUCTURING OF MONOLITHIC APPLICATIONS: A COMPARISON OF SINGLE MODULE, LAYERED "
              "ARCHITECTURE (MVC) AND CLEAN ARCHITECTURE", align=C, indent=False, bold=True, spacing=1.0, after=10)
     if not sem_autores:
-        bloco_autores(doc, esc)
+        bloco_autores(doc, esc, dados)
     esc.para(f"**RESUMO:** {resumo}", indent=False, spacing=1.0, size=11)
     esc.para("**Palavras-chave:** Arquitetura de Software; Desempenho; Escalabilidade; Manutenibilidade; "
              "Testabilidade.", indent=False, spacing=1.0, size=11, after=8)
@@ -665,6 +683,13 @@ def main():
         f = construir(sem, saida)
         print("gerado:", saida.name)
     print("escala incluída:", f["escala"])
+    dados = dados_locais()
+    if dados:
+        pasta = AQUI / "local"
+        pasta.mkdir(exist_ok=True)
+        saida = pasta / (NOME_BASE + "_preenchido.docx")
+        construir(False, saida, dados)
+        print("gerado (LOCAL, não versionar):", saida.relative_to(AQUI))
 
 
 if __name__ == "__main__":

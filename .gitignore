@@ -25,3 +25,7 @@ Thumbs.db
 
 # Log de execucao do servico de benchmark (os dados do experimento ficam em data/bruto/experimento)
 data/bruto/carga/resultados.json
+
+# Dados pessoais dos autores (ORCID, CPF, e-mail): preenchimento local, nunca versionado
+publicacao/tarefa09-contecsi/manuscrito/autores.local.json
+publicacao/tarefa09-contecsi/manuscrito/local/
