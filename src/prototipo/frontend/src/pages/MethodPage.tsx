@@ -24,7 +24,7 @@ export function MethodPage() {
       <PageHeader
         eyebrow="Protocolo"
         title="Método"
-        description="Protótipo tripartido: a mesma aplicação construída três vezes, variando apenas o padrão arquitetural."
+        description="Protótipo tripartido: a mesma aplicação, implantada como monólito, construída três vezes variando apenas a organização interna do código."
       />
       <div className="grid gap-4 lg:grid-cols-3">
         {ARCHITECTURES.map((a) => (

@@ -95,7 +95,7 @@ export function MetricsPage() {
             <Card title="Cobertura da regra de negócio" description="Mesmos 8 casos de teste, só na camada de negócio" className="lg:col-span-2">
               <ArchBarChart label="Cobertura da regra de negócio" unit="%" data={metric((_m, r) => businessCoverage(r))} />
               <p className="mt-2 text-xs text-fg-muted">
-                Monólito: arquivo único · Camadas: <code>services/</code> · Clean: <code>domain/</code>.
+                Módulo único: o arquivo inteiro · Camadas: <code>services/</code> · Clean: <code>domain/</code>.
               </p>
             </Card>
           </div>

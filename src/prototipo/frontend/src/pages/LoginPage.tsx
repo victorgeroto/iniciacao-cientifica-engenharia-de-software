@@ -8,7 +8,7 @@ import { ARCHITECTURES } from "../lib/architectures";
 import { session, SessionResult } from "../lib/api";
 
 const FEATURES = [
-  { icon: GitCompareArrows, title: "Mesma aplicação, 3 arquiteturas", text: "Só o padrão arquitetural varia." },
+  { icon: GitCompareArrows, title: "Mesma aplicação, 3 organizações", text: "Só a organização interna do código varia." },
   { icon: Database, title: "Bancos isolados", text: "Um PostgreSQL por API, mesmos recursos." },
   { icon: ShieldCheck, title: "Equivalência verificada", text: "O mesmo roteiro HTTP precisa dar as mesmas respostas." },
 ];
@@ -105,9 +105,9 @@ export function LoginPage() {
               Protótipo tripartido · Engenharia de Software
             </p>
             <h1 className="text-4xl font-semibold leading-tight tracking-tight xl:text-5xl">
-              Três arquiteturas.
+              Três organizações de código.
               <br />
-              <span className="text-gradient">Uma aplicação. Mesmas condições.</span>
+              <span className="text-gradient">Um monólito. Mesmas condições.</span>
             </h1>
             <p className="mt-4 max-w-lg text-base text-fg-muted text-pretty">{ABOUT_TEXT}</p>
           </div>

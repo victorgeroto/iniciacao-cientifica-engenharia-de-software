@@ -15,13 +15,13 @@ const backendRoot = process.env.SOURCES_DIR ?? path.resolve(__dirname, "..", "..
 export const ARCHITECTURES: ArchitectureConfig[] = [
   {
     id: "monolito",
-    label: "Monólito",
+    label: "Módulo único",
     url: process.env.MONOLITO_URL ?? "http://localhost:3001",
     sourceDir: path.join(backendRoot, "api-monolito"),
   },
   {
     id: "camadas",
-    label: "Camadas (MVC)",
+    label: "Camadas",
     url: process.env.CAMADAS_URL ?? "http://localhost:3002",
     sourceDir: path.join(backendRoot, "api-camadas"),
   },

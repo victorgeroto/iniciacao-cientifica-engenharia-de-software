@@ -199,7 +199,7 @@ export function TasksPage() {
             </div>
           ) : tasks.length === 0 && !error ? (
             <EmptyState icon={<ClipboardList className="size-8" />} title="Nenhuma tarefa nesta arquitetura">
-              Cada API tem seu próprio banco: as tarefas criadas no Monólito não aparecem na Clean Architecture.
+              Cada API tem seu próprio banco: as tarefas criadas no Módulo único não aparecem na Clean Architecture.
             </EmptyState>
           ) : (
             <div className="grid gap-4 md:grid-cols-3">

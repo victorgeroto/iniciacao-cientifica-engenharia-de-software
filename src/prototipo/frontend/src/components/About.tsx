@@ -8,9 +8,10 @@ const KEY = "proto.about.dismissed";
 /** Texto único usado no login e na tela inicial, para a descrição nunca divergir. */
 export const ABOUT_TEXT =
   "Este software é o instrumento experimental de uma pesquisa de Iniciação Científica em Engenharia de Software. " +
-  "A mesma aplicação de gerenciamento de tarefas foi construída três vezes, uma em cada padrão arquitetural: " +
-  "Monólito, Arquitetura em Camadas (MVC) e Clean Architecture. Assim é possível comparar as três em condições " +
-  "idênticas: tempo de resposta, throughput, memória, tamanho do código, acoplamento e cobertura de testes.";
+  "A mesma aplicação de gerenciamento de tarefas foi construída três vezes, sempre implantada como monólito, " +
+  "variando apenas a organização interna do código: módulo único (Transaction Script), arquitetura em camadas e " +
+  "Clean Architecture. Assim é possível medir, em condições idênticas, desempenho, escalabilidade, acoplamento, " +
+  "testabilidade e esforço de modificação.";
 
 const STEPS = [
   { to: "/tarefas", icon: ListTodo, title: "1. Use a aplicação", text: "Crie tarefas em cada arquitetura e veja o tempo de cada requisição." },
@@ -51,7 +52,7 @@ export function AboutCard() {
           <div>
             <p className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-accent">Sobre este software</p>
             <h2 id="sobre-titulo" className="text-xl font-semibold tracking-tight text-balance">
-              Três arquiteturas, uma aplicação, as mesmas condições
+              Três organizações de código, uma aplicação monolítica
             </h2>
           </div>
           <IconButton label="Dispensar a apresentação" onClick={dismiss} className="-mr-2 -mt-2 shrink-0">

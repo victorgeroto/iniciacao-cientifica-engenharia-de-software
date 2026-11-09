@@ -1,6 +1,8 @@
 # Protótipo tripartido
 
-Software de pesquisa que replica o experimento do projeto **Comparativo Arquitetural: Monólito, Arquitetura em Camadas (MVC) e Clean Architecture em Sistemas Escaláveis**.
+Software de pesquisa que executa o experimento do projeto **Organização interna de aplicações monolíticas: comparação experimental entre módulo único, arquitetura em camadas e Clean Architecture**.
+
+> **Enquadramento.** As três versões são **implantadas como monólito**: cada uma é um único artefato, com seu próprio banco. O que varia é só a **organização interna do código**. O protocolo e a análise estão em [`src/experimentos`](../experimentos/README.md).
 
 A mesma aplicação de gerenciamento de tarefas foi construída três vezes, mudando só o padrão arquitetural. Um serviço de benchmark mede as três nas mesmas condições, e a interface web mostra os resultados lado a lado.
 
@@ -31,15 +33,15 @@ src/prototipo/
 ├── docker-compose.yml        3 PostgreSQL + 3 APIs + bench + frontend
 ├── backend/                  workspace npm (TypeScript)
 │   ├── shared/               instrumentação de métricas (idêntica nas 3 APIs)
-│   ├── api-monolito/  :3001  tudo em src/server.ts
-│   ├── api-camadas/   :3002  controllers → services → repositories → models
-│   ├── api-clean/     :3003  domain (entities, usecases, ports) ← interfaces ← infrastructure
+│   ├── api-monolito/  :3001  A · módulo único (Transaction Script): tudo em src/server.ts
+│   ├── api-camadas/   :3002  B · camadas: controllers → services → repositories
+│   ├── api-clean/     :3003  C · Clean Architecture: domain ← interfaces ← infrastructure
 │   ├── bench/         :3000  teste de carga (autocannon) e métricas de código
 │   └── jmeter/               plano-carga.jmx, para replicar com Apache JMeter
 └── frontend/          :8080  React + TypeScript + Vite + Tailwind + Recharts + Axios
 ```
 
-As estruturas seguem [`diagramas/arquitetura/descricao-arquitetura.md`](../../diagramas/arquitetura/descricao-arquitetura.md). Há uma diferença deliberada: o banco é **PostgreSQL**, e não SQLite, como no manuscrito submetido. Continua havendo um banco por API.
+As estruturas seguem [`diagramas/arquitetura/descricao-arquitetura.md`](../../diagramas/arquitetura/descricao-arquitetura.md). Há uma diferença deliberada: o banco é **PostgreSQL**, e não SQLite. Continua havendo um banco por API.
 
 ## O que é mantido constante
 
@@ -93,13 +95,13 @@ Repita com `-JPORT=3002` e `-JPORT=3003`. O plano cria um usuário e 20 tarefas 
 | Fan-out | Imports internos (relativos) por arquivo |
 | Dependências entre camadas | Imports que atravessam camadas |
 | Cobertura total | Linhas cobertas pelos testes de unidade, sobre todo o `src/` |
-| Cobertura de negócio | Mesma cobertura, só na camada de regra de negócio (Monólito: o arquivo único · Camadas: `services/` · Clean: `domain/`) |
+| Cobertura de negócio | Mesma cobertura, só na camada de regra de negócio (Módulo único: o arquivo inteiro · Camadas: `services/` · Clean: `domain/`) |
 | Throughput e latência | Medidos pelo autocannon, com aquecimento antes e métricas do servidor zeradas |
 | Latência interna e memória | Informadas por cada API em `GET /metrics` |
 
-**Testes de unidade:** cada API tem os mesmos 8 casos de comportamento, escritos sem banco real e do jeito natural de cada arquitetura.
+**Testes de unidade:** cada API tem os mesmos 8 casos de comportamento, escritos sem banco real e do jeito natural de cada organização.
 
-- **Monólito:** intercepta `pool.query` e testa via HTTP, porque não há ponto de injeção.
+- **Módulo único:** intercepta `pool.query` e testa via HTTP, porque não há ponto de injeção.
 - **Camadas:** um repositório falso entra pelo construtor do service.
 - **Clean:** implementações em memória das portas.
 
