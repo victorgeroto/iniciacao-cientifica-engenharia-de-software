@@ -22,3 +22,6 @@ Thumbs.db
 
 # Arquivos temporários do Word
 ~$*
+
+# Log de execucao do servico de benchmark (os dados do experimento ficam em data/bruto/experimento)
+data/bruto/carga/resultados.json
