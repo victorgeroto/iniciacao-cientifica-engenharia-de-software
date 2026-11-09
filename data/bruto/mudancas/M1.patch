@@ -1,0 +1,273 @@
+diff --git a/api-camadas/src/config/database.ts b/api-camadas/src/config/database.ts
+index 707769f..11a6ca2 100644
+--- a/api-camadas/src/config/database.ts
++++ b/api-camadas/src/config/database.ts
+@@ -18,10 +18,12 @@ CREATE TABLE IF NOT EXISTS tasks (
+   description TEXT NOT NULL DEFAULT '',
+   status VARCHAR(10) NOT NULL DEFAULT 'todo',
+   priority VARCHAR(10) NOT NULL DEFAULT 'medium',
++  due_date DATE,
+   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+ );
+ CREATE INDEX IF NOT EXISTS idx_tasks_user ON tasks(user_id);
++ALTER TABLE tasks ADD COLUMN IF NOT EXISTS due_date DATE;
+ `;
+ 
+ export async function initDatabase(): Promise<void> {
+diff --git a/api-camadas/src/models/Task.ts b/api-camadas/src/models/Task.ts
+index 71bb48b..0ae73df 100644
+--- a/api-camadas/src/models/Task.ts
++++ b/api-camadas/src/models/Task.ts
+@@ -9,6 +9,7 @@ export interface Task {
+   description: string;
+   status: TaskStatus;
+   priority: TaskPriority;
++  dueDate: string | null;
+   createdAt: Date;
+   updatedAt: Date;
+ }
+@@ -18,6 +19,7 @@ export const taskCreateSchema = z.object({
+   description: z.string().max(1000).default(""),
+   status: z.enum(["todo", "doing", "done"]).default("todo"),
+   priority: z.enum(["low", "medium", "high"]).default("medium"),
++  dueDate: z.string().date().nullable().default(null),
+ });
+ export const taskUpdateSchema = taskCreateSchema.partial();
+ 
+diff --git a/api-camadas/src/repositories/TaskRepository.ts b/api-camadas/src/repositories/TaskRepository.ts
+index 699c51b..f5bc7f5 100644
+--- a/api-camadas/src/repositories/TaskRepository.ts
++++ b/api-camadas/src/repositories/TaskRepository.ts
+@@ -2,7 +2,7 @@ import { pool } from "../config/database";
+ import { Task, TaskCreateInput } from "../models/Task";
+ 
+ const COLUMNS =
+-  'id, title, description, status, priority, created_at AS "createdAt", updated_at AS "updatedAt"';
++  'id, title, description, status, priority, to_char(due_date, \'YYYY-MM-DD\') AS "dueDate", created_at AS "createdAt", updated_at AS "updatedAt"';
+ 
+ export class TaskRepository {
+   async findAllByUser(userId: number): Promise<Task[]> {
+@@ -20,18 +20,18 @@ export class TaskRepository {
+ 
+   async create(userId: number, t: Required<TaskCreateInput>): Promise<Task> {
+     const { rows } = await pool.query(
+-      `INSERT INTO tasks (user_id, title, description, status, priority) VALUES ($1, $2, $3, $4, $5)
++      `INSERT INTO tasks (user_id, title, description, status, priority, due_date) VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING ${COLUMNS}`,
+-      [userId, t.title, t.description, t.status, t.priority],
++      [userId, t.title, t.description, t.status, t.priority, t.dueDate],
+     );
+     return rows[0];
+   }
+ 
+   async update(id: number, userId: number, t: Required<TaskCreateInput>): Promise<Task> {
+     const { rows } = await pool.query(
+-      `UPDATE tasks SET title = $1, description = $2, status = $3, priority = $4, updated_at = NOW()
+-       WHERE id = $5 AND user_id = $6 RETURNING ${COLUMNS}`,
+-      [t.title, t.description, t.status, t.priority, id, userId],
++      `UPDATE tasks SET title = $1, description = $2, status = $3, priority = $4, due_date = $5, updated_at = NOW()
++       WHERE id = $6 AND user_id = $7 RETURNING ${COLUMNS}`,
++      [t.title, t.description, t.status, t.priority, t.dueDate, id, userId],
+     );
+     return rows[0];
+   }
+diff --git a/api-camadas/src/services/TaskService.ts b/api-camadas/src/services/TaskService.ts
+index 312518a..a00a364 100644
+--- a/api-camadas/src/services/TaskService.ts
++++ b/api-camadas/src/services/TaskService.ts
+@@ -39,6 +39,7 @@ export class TaskService {
+       description: merged.description,
+       status: merged.status,
+       priority: merged.priority,
++      dueDate: merged.dueDate,
+     });
+   }
+ 
+diff --git a/api-clean/src/domain/entities/Task.ts b/api-clean/src/domain/entities/Task.ts
+index cbc3eac..c655aa9 100644
+--- a/api-clean/src/domain/entities/Task.ts
++++ b/api-clean/src/domain/entities/Task.ts
+@@ -9,11 +9,12 @@ export interface TaskProps {
+   description: string;
+   status: TaskStatus;
+   priority: TaskPriority;
++  dueDate: string | null;
+   createdAt: Date;
+   updatedAt: Date;
+ }
+ 
+-export type TaskChanges = Partial<Pick<TaskProps, "title" | "description" | "status" | "priority">>;
++export type TaskChanges = Partial<Pick<TaskProps, "title" | "description" | "status" | "priority" | "dueDate">>;
+ 
+ export class Task {
+   private constructor(private readonly props: TaskProps) {}
+diff --git a/api-clean/src/domain/ports/index.ts b/api-clean/src/domain/ports/index.ts
+index 054c66d..0d9905a 100644
+--- a/api-clean/src/domain/ports/index.ts
++++ b/api-clean/src/domain/ports/index.ts
+@@ -11,6 +11,7 @@ export interface NewTask {
+   description: string;
+   status: TaskStatus;
+   priority: TaskPriority;
++  dueDate: string | null;
+ }
+ 
+ export interface TaskRepository {
+diff --git a/api-clean/src/domain/usecases/CreateTask.ts b/api-clean/src/domain/usecases/CreateTask.ts
+index b2a19b6..d7ccd0a 100644
+--- a/api-clean/src/domain/usecases/CreateTask.ts
++++ b/api-clean/src/domain/usecases/CreateTask.ts
+@@ -6,6 +6,7 @@ export interface CreateTaskInput {
+   description: string;
+   status: TaskStatus;
+   priority: TaskPriority;
++  dueDate: string | null;
+ }
+ 
+ export class CreateTask {
+diff --git a/api-clean/src/infrastructure/database/PgTaskRepository.ts b/api-clean/src/infrastructure/database/PgTaskRepository.ts
+index 7acea4d..6c4643d 100644
+--- a/api-clean/src/infrastructure/database/PgTaskRepository.ts
++++ b/api-clean/src/infrastructure/database/PgTaskRepository.ts
+@@ -3,7 +3,7 @@ import { Task, TaskProps } from "../../domain/entities/Task";
+ import type { NewTask, TaskRepository } from "../../domain/ports";
+ 
+ const COLUMNS =
+-  'id, user_id AS "userId", title, description, status, priority, created_at AS "createdAt", updated_at AS "updatedAt"';
++  'id, user_id AS "userId", title, description, status, priority, to_char(due_date, \'YYYY-MM-DD\') AS "dueDate", created_at AS "createdAt", updated_at AS "updatedAt"';
+ 
+ const toEntity = (row: TaskProps) => Task.restore(row);
+ 
+@@ -28,9 +28,9 @@ export class PgTaskRepository implements TaskRepository {
+ 
+   async create(t: NewTask): Promise<Task> {
+     const { rows } = await this.pool.query(
+-      `INSERT INTO tasks (user_id, title, description, status, priority) VALUES ($1, $2, $3, $4, $5)
++      `INSERT INTO tasks (user_id, title, description, status, priority, due_date) VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING ${COLUMNS}`,
+-      [t.userId, t.title, t.description, t.status, t.priority],
++      [t.userId, t.title, t.description, t.status, t.priority, t.dueDate],
+     );
+     return toEntity(rows[0]);
+   }
+@@ -38,9 +38,9 @@ export class PgTaskRepository implements TaskRepository {
+   async save(task: Task): Promise<Task> {
+     const t = task.data;
+     const { rows } = await this.pool.query(
+-      `UPDATE tasks SET title = $1, description = $2, status = $3, priority = $4, updated_at = NOW()
+-       WHERE id = $5 AND user_id = $6 RETURNING ${COLUMNS}`,
+-      [t.title, t.description, t.status, t.priority, t.id, t.userId],
++      `UPDATE tasks SET title = $1, description = $2, status = $3, priority = $4, due_date = $5, updated_at = NOW()
++       WHERE id = $6 AND user_id = $7 RETURNING ${COLUMNS}`,
++      [t.title, t.description, t.status, t.priority, t.dueDate, t.id, t.userId],
+     );
+     return toEntity(rows[0]);
+   }
+diff --git a/api-clean/src/infrastructure/database/pool.ts b/api-clean/src/infrastructure/database/pool.ts
+index 7305f36..6744f30 100644
+--- a/api-clean/src/infrastructure/database/pool.ts
++++ b/api-clean/src/infrastructure/database/pool.ts
+@@ -16,10 +16,12 @@ CREATE TABLE IF NOT EXISTS tasks (
+   description TEXT NOT NULL DEFAULT '',
+   status VARCHAR(10) NOT NULL DEFAULT 'todo',
+   priority VARCHAR(10) NOT NULL DEFAULT 'medium',
++  due_date DATE,
+   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+ );
+ CREATE INDEX IF NOT EXISTS idx_tasks_user ON tasks(user_id);
++ALTER TABLE tasks ADD COLUMN IF NOT EXISTS due_date DATE;
+ `;
+ 
+ export function createPool(connectionString: string): Pool {
+diff --git a/api-clean/src/interfaces/controllers/validators.ts b/api-clean/src/interfaces/controllers/validators.ts
+index a2655fd..e7628ed 100644
+--- a/api-clean/src/interfaces/controllers/validators.ts
++++ b/api-clean/src/interfaces/controllers/validators.ts
+@@ -16,6 +16,7 @@ export const taskCreateSchema = z.object({
+   description: z.string().max(1000).default(""),
+   status: z.enum(["todo", "doing", "done"]).default("todo"),
+   priority: z.enum(["low", "medium", "high"]).default("medium"),
++  dueDate: z.string().date().nullable().default(null),
+ });
+ export const taskUpdateSchema = taskCreateSchema.partial();
+ 
+diff --git a/api-monolito/src/server.ts b/api-monolito/src/server.ts
+index a2025c5..63e2507 100644
+--- a/api-monolito/src/server.ts
++++ b/api-monolito/src/server.ts
+@@ -35,10 +35,12 @@ CREATE TABLE IF NOT EXISTS tasks (
+   description TEXT NOT NULL DEFAULT '',
+   status VARCHAR(10) NOT NULL DEFAULT 'todo',
+   priority VARCHAR(10) NOT NULL DEFAULT 'medium',
++  due_date DATE,
+   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+ );
+ CREATE INDEX IF NOT EXISTS idx_tasks_user ON tasks(user_id);
++ALTER TABLE tasks ADD COLUMN IF NOT EXISTS due_date DATE;
+ `;
+ 
+ const registerSchema = z.object({
+@@ -55,11 +57,12 @@ const taskCreateSchema = z.object({
+   description: z.string().max(1000).default(""),
+   status: z.enum(["todo", "doing", "done"]).default("todo"),
+   priority: z.enum(["low", "medium", "high"]).default("medium"),
++  dueDate: z.string().date().nullable().default(null),
+ });
+ const taskUpdateSchema = taskCreateSchema.partial();
+ 
+ const TASK_COLUMNS =
+-  "id, title, description, status, priority, created_at AS \"createdAt\", updated_at AS \"updatedAt\"";
++  "id, title, description, status, priority, to_char(due_date, 'YYYY-MM-DD') AS \"dueDate\", created_at AS \"createdAt\", updated_at AS \"updatedAt\"";
+ 
+ export const app = express();
+ const metrics = new MetricsRegistry(ARCHITECTURE);
+@@ -154,9 +157,9 @@ app.post("/tasks", auth, async (req, res, next) => {
+     if (!parsed.success) return res.status(400).json({ error: "Dados inválidos", details: parsed.error.issues });
+     const t = parsed.data;
+     const { rows } = await pool.query(
+-      `INSERT INTO tasks (user_id, title, description, status, priority) VALUES ($1, $2, $3, $4, $5)
++      `INSERT INTO tasks (user_id, title, description, status, priority, due_date) VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING ${TASK_COLUMNS}`,
+-      [userId, t.title, t.description, t.status, t.priority],
++      [userId, t.title, t.description, t.status, t.priority, t.dueDate],
+     );
+     res.status(201).json(rows[0]);
+   } catch (err) {
+@@ -178,9 +181,9 @@ app.put("/tasks/:id", auth, async (req, res, next) => {
+     if (!current.rows[0]) return res.status(404).json({ error: "Tarefa não encontrada" });
+     const merged = { ...current.rows[0], ...parsed.data };
+     const { rows } = await pool.query(
+-      `UPDATE tasks SET title = $1, description = $2, status = $3, priority = $4, updated_at = NOW()
+-       WHERE id = $5 AND user_id = $6 RETURNING ${TASK_COLUMNS}`,
+-      [merged.title, merged.description, merged.status, merged.priority, id, userId],
++      `UPDATE tasks SET title = $1, description = $2, status = $3, priority = $4, due_date = $5, updated_at = NOW()
++       WHERE id = $6 AND user_id = $7 RETURNING ${TASK_COLUMNS}`,
++      [merged.title, merged.description, merged.status, merged.priority, merged.dueDate, id, userId],
+     );
+     res.json(rows[0]);
+   } catch (err) {
+diff --git a/api-monolito/test/server.test.ts b/api-monolito/test/server.test.ts
+index bada231..73394d9 100644
+--- a/api-monolito/test/server.test.ts
++++ b/api-monolito/test/server.test.ts
+@@ -35,7 +35,7 @@ describe("monólito — tarefas", () => {
+     const spy = scriptQueries({ rows: [row()] });
+     const res = await request(app).post("/tasks").set(auth).send({ title: "Tarefa" });
+     expect(res.status).toBe(201);
+-    expect(spy.mock.calls[0][1]).toEqual([1, "Tarefa", "", "todo", "medium"]);
++    expect(spy.mock.calls[0][1]).toEqual([1, "Tarefa", "", "todo", "medium", null]);
+   });
+ 
+   it("rejeita título vazio", async () => {
+@@ -60,7 +60,7 @@ describe("monólito — tarefas", () => {
+     const spy = scriptQueries({ rows: [row({ title: "Antigo", priority: "high" })] }, { rows: [row({ status: "done" })] });
+     const res = await request(app).put("/tasks/1").set(auth).send({ status: "done" });
+     expect(res.status).toBe(200);
+-    expect(spy.mock.calls[1][1]).toEqual(["Antigo", "", "done", "high", 1, 1]);
++    expect(spy.mock.calls[1][1]).toEqual(["Antigo", "", "done", "high", undefined, 1, 1]);
+   });
+ 
+   it("remove tarefa e devolve 404 se ela não existir", async () => {

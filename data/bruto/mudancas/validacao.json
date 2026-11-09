@@ -1,0 +1,29 @@
+[
+  {
+    "mudanca": "M1",
+    "build_e_testes": "ok (tsc + 8 testes de unidade por versão)",
+    "aceitacao": {
+      "monolito": "ok",
+      "camadas": "ok",
+      "clean": "ok"
+    }
+  },
+  {
+    "mudanca": "M2",
+    "build_e_testes": "ok (tsc + 8 testes de unidade por versão)",
+    "aceitacao": {
+      "monolito": "ok",
+      "camadas": "ok",
+      "clean": "ok"
+    }
+  },
+  {
+    "mudanca": "M3",
+    "build_e_testes": "ok (tsc + 8 testes de unidade por versão)",
+    "aceitacao": {
+      "monolito": "ok",
+      "camadas": "ok",
+      "clean": "ok"
+    }
+  }
+]

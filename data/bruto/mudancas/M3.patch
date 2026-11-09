@@ -1,0 +1,240 @@
+diff --git a/api-camadas/src/services/AuthService.ts b/api-camadas/src/services/AuthService.ts
+index d9b794e..baac5dd 100644
+--- a/api-camadas/src/services/AuthService.ts
++++ b/api-camadas/src/services/AuthService.ts
+@@ -1,9 +1,9 @@
+-import bcrypt from "bcryptjs";
+ import jwt from "jsonwebtoken";
+ import { env } from "../config/env";
+ import { HttpError } from "../models/HttpError";
+ import { loginSchema, registerSchema, User } from "../models/User";
+ import { UserRepository } from "../repositories/UserRepository";
++import { hashPassword, verifyPassword } from "../utils/password";
+ 
+ export interface AuthResult {
+   token: string;
+@@ -22,7 +22,7 @@ export class AuthService {
+     if (!parsed.success) throw new HttpError(400, "Dados inválidos", parsed.error.issues);
+     const { name, email, password } = parsed.data;
+     if (await this.users.findByEmail(email)) throw new HttpError(409, "E-mail já cadastrado");
+-    const user = await this.users.create(name, email, await bcrypt.hash(password, 8));
++    const user = await this.users.create(name, email, await hashPassword(password));
+     return { token: this.sign(user), user };
+   }
+ 
+@@ -30,7 +30,7 @@ export class AuthService {
+     const parsed = loginSchema.safeParse(body);
+     if (!parsed.success) throw new HttpError(400, "Dados inválidos", parsed.error.issues);
+     const found = await this.users.findByEmail(parsed.data.email);
+-    if (!found || !(await bcrypt.compare(parsed.data.password, found.passwordHash))) {
++    if (!found || !(await verifyPassword(parsed.data.password, found.passwordHash))) {
+       throw new HttpError(401, "Credenciais inválidas");
+     }
+     const user = { id: found.id, name: found.name, email: found.email };
+diff --git a/api-camadas/src/utils/password.ts b/api-camadas/src/utils/password.ts
+new file mode 100644
+index 0000000..c60add3
+--- /dev/null
++++ b/api-camadas/src/utils/password.ts
+@@ -0,0 +1,17 @@
++import { randomBytes, scrypt as scryptCallback, timingSafeEqual } from "node:crypto";
++import { promisify } from "node:util";
++
++const scrypt = promisify(scryptCallback) as (plain: string, salt: Buffer, keylen: number) => Promise<Buffer>;
++
++export async function hashPassword(plain: string): Promise<string> {
++  const salt = randomBytes(16);
++  const key = await scrypt(plain, salt, 24);
++  return `scrypt$${salt.toString("hex")}$${key.toString("hex")}`;
++}
++
++export async function verifyPassword(plain: string, stored: string): Promise<boolean> {
++  const [alg, saltHex, keyHex] = stored.split("$");
++  if (alg !== "scrypt" || !saltHex || !keyHex) return false;
++  const key = await scrypt(plain, Buffer.from(saltHex, "hex"), 24);
++  return timingSafeEqual(key, Buffer.from(keyHex, "hex"));
++}
+diff --git a/api-camadas/test/services.test.ts b/api-camadas/test/services.test.ts
+index f78d016..b8746dc 100644
+--- a/api-camadas/test/services.test.ts
++++ b/api-camadas/test/services.test.ts
+@@ -3,13 +3,13 @@
+  * Em camadas, o service recebe o repositório pelo construtor: basta um objeto
+  * falso com a mesma forma da classe concreta (sem interface explícita).
+  */
+-import bcrypt from "bcryptjs";
+ import { describe, expect, it } from "vitest";
+ import type { Task } from "../src/models/Task";
+ import type { TaskRepository } from "../src/repositories/TaskRepository";
+ import type { UserRepository } from "../src/repositories/UserRepository";
+ import { AuthService } from "../src/services/AuthService";
+ import { TaskService } from "../src/services/TaskService";
++import { hashPassword } from "../src/utils/password";
+ 
+ function fakeTaskRepo() {
+   const rows: Array<Task & { userId: number }> = [];
+@@ -102,7 +102,7 @@ describe("camadas — autenticação", () => {
+   });
+ 
+   it("recusa login com senha errada e token inválido", async () => {
+-    const hash = bcrypt.hashSync("certa", 4);
++    const hash = await hashPassword("certa");
+     const s = new AuthService(fakeUserRepo([{ id: 1, name: "Ana", email: "ana@x.com", passwordHash: hash }]));
+     await expect(s.login({ email: "ana@x.com", password: "errada" })).rejects.toMatchObject({ status: 401 });
+     expect(() => s.verify("token-invalido")).toThrow();
+diff --git a/api-clean/src/infrastructure/security/BcryptHasher.ts b/api-clean/src/infrastructure/security/BcryptHasher.ts
+deleted file mode 100644
+index b0b46f5..0000000
+--- a/api-clean/src/infrastructure/security/BcryptHasher.ts
++++ /dev/null
+@@ -1,14 +0,0 @@
+-import bcrypt from "bcryptjs";
+-import type { PasswordHasher } from "../../domain/ports";
+-
+-export class BcryptHasher implements PasswordHasher {
+-  constructor(private readonly rounds = 8) {}
+-
+-  hash(plain: string): Promise<string> {
+-    return bcrypt.hash(plain, this.rounds);
+-  }
+-
+-  compare(plain: string, hash: string): Promise<boolean> {
+-    return bcrypt.compare(plain, hash);
+-  }
+-}
+diff --git a/api-clean/src/infrastructure/security/ScryptHasher.ts b/api-clean/src/infrastructure/security/ScryptHasher.ts
+new file mode 100644
+index 0000000..3969b46
+--- /dev/null
++++ b/api-clean/src/infrastructure/security/ScryptHasher.ts
+@@ -0,0 +1,28 @@
++import { randomBytes, scrypt as scryptCallback, timingSafeEqual } from "node:crypto";
++import { promisify } from "node:util";
++import type { PasswordHasher } from "../../domain/ports";
++
++const scrypt = promisify(scryptCallback) as (plain: string, salt: Buffer, keylen: number) => Promise<Buffer>;
++
++async function hashPassword(plain: string): Promise<string> {
++  const salt = randomBytes(16);
++  const key = await scrypt(plain, salt, 24);
++  return `scrypt$${salt.toString("hex")}$${key.toString("hex")}`;
++}
++
++async function verifyPassword(plain: string, stored: string): Promise<boolean> {
++  const [alg, saltHex, keyHex] = stored.split("$");
++  if (alg !== "scrypt" || !saltHex || !keyHex) return false;
++  const key = await scrypt(plain, Buffer.from(saltHex, "hex"), 24);
++  return timingSafeEqual(key, Buffer.from(keyHex, "hex"));
++}
++
++export class ScryptHasher implements PasswordHasher {
++  hash(plain: string): Promise<string> {
++    return hashPassword(plain);
++  }
++
++  compare(plain: string, hash: string): Promise<boolean> {
++    return verifyPassword(plain, hash);
++  }
++}
+diff --git a/api-clean/src/main.ts b/api-clean/src/main.ts
+index 16df7d1..0fa823a 100644
+--- a/api-clean/src/main.ts
++++ b/api-clean/src/main.ts
+@@ -15,7 +15,7 @@ import { PgTaskRepository } from "./infrastructure/database/PgTaskRepository";
+ import { PgUserRepository } from "./infrastructure/database/PgUserRepository";
+ import { createHttpApp } from "./infrastructure/http/server";
+ import { ConsoleLogger } from "./infrastructure/logger/Logger";
+-import { BcryptHasher } from "./infrastructure/security/BcryptHasher";
++import { ScryptHasher } from "./infrastructure/security/ScryptHasher";
+ import { JwtTokenService } from "./infrastructure/security/JwtTokenService";
+ import { AuthController } from "./interfaces/controllers/AuthController";
+ import { TaskController } from "./interfaces/controllers/TaskController";
+@@ -32,7 +32,7 @@ async function main() {
+ 
+   const taskRepo = new PgTaskRepository(pool);
+   const userRepo = new PgUserRepository(pool);
+-  const hasher = new BcryptHasher();
++  const hasher = new ScryptHasher();
+   const tokens = new JwtTokenService(JWT_SECRET);
+ 
+   const tasks = new TaskController({
+diff --git a/api-monolito/src/server.ts b/api-monolito/src/server.ts
+index a2025c5..3d3a5c8 100644
+--- a/api-monolito/src/server.ts
++++ b/api-monolito/src/server.ts
+@@ -7,7 +7,8 @@
+  */
+ import express, { NextFunction, Request, Response } from "express";
+ import { Pool } from "pg";
+-import bcrypt from "bcryptjs";
++import { randomBytes, scrypt as scryptCallback, timingSafeEqual } from "node:crypto";
++import { promisify } from "node:util";
+ import jwt from "jsonwebtoken";
+ import { z } from "zod";
+ import { MetricsRegistry, mountMetricsEndpoints } from "@proto/shared";
+@@ -61,6 +62,21 @@ const taskUpdateSchema = taskCreateSchema.partial();
+ const TASK_COLUMNS =
+   "id, title, description, status, priority, created_at AS \"createdAt\", updated_at AS \"updatedAt\"";
+ 
++const scrypt = promisify(scryptCallback) as (plain: string, salt: Buffer, keylen: number) => Promise<Buffer>;
++
++export async function hashPassword(plain: string): Promise<string> {
++  const salt = randomBytes(16);
++  const key = await scrypt(plain, salt, 24);
++  return `scrypt$${salt.toString("hex")}$${key.toString("hex")}`;
++}
++
++export async function verifyPassword(plain: string, stored: string): Promise<boolean> {
++  const [alg, saltHex, keyHex] = stored.split("$");
++  if (alg !== "scrypt" || !saltHex || !keyHex) return false;
++  const key = await scrypt(plain, Buffer.from(saltHex, "hex"), 24);
++  return timingSafeEqual(key, Buffer.from(keyHex, "hex"));
++}
++
+ export const app = express();
+ const metrics = new MetricsRegistry(ARCHITECTURE);
+ app.use(metrics.middleware());
+@@ -90,7 +106,7 @@ app.post("/auth/register", async (req, res, next) => {
+     const { name, email, password } = parsed.data;
+     const exists = await pool.query("SELECT 1 FROM users WHERE email = $1", [email]);
+     if (exists.rowCount) return res.status(409).json({ error: "E-mail já cadastrado" });
+-    const hash = await bcrypt.hash(password, 8);
++    const hash = await hashPassword(password);
+     const { rows } = await pool.query(
+       "INSERT INTO users (name, email, password_hash) VALUES ($1, $2, $3) RETURNING id, name, email",
+       [name, email, hash],
+@@ -109,7 +125,7 @@ app.post("/auth/login", async (req, res, next) => {
+       parsed.data.email,
+     ]);
+     const user = rows[0];
+-    if (!user || !(await bcrypt.compare(parsed.data.password, user.password_hash))) {
++    if (!user || !(await verifyPassword(parsed.data.password, user.password_hash))) {
+       return res.status(401).json({ error: "Credenciais inválidas" });
+     }
+     res.json({ token: sign(user), user: { id: user.id, name: user.name, email: user.email } });
+diff --git a/api-monolito/test/server.test.ts b/api-monolito/test/server.test.ts
+index bada231..c365da9 100644
+--- a/api-monolito/test/server.test.ts
++++ b/api-monolito/test/server.test.ts
+@@ -3,11 +3,10 @@
+  * No monólito não há ponto de injeção: a única forma de isolar o banco é
+  * interceptar pool.query e roteirizar as respostas SQL de cada chamada.
+  */
+-import bcrypt from "bcryptjs";
+ import jwt from "jsonwebtoken";
+ import request from "supertest";
+ import { afterEach, describe, expect, it, vi } from "vitest";
+-import { app, pool } from "../src/server";
++import { app, hashPassword, pool } from "../src/server";
+ 
+ const token = jwt.sign({ sub: 1, email: "a@a.com" }, "dev-secret-trocar");
+ const auth = { Authorization: `Bearer ${token}` };
+@@ -81,7 +80,7 @@ describe("monólito — autenticação", () => {
+   });
+ 
+   it("recusa login com senha errada e token ausente", async () => {
+-    const hash = bcrypt.hashSync("certa", 4);
++    const hash = await hashPassword("certa");
+     scriptQueries({ rows: [{ id: 1, name: "Ana", email: "ana@x.com", password_hash: hash }] });
+     expect((await request(app).post("/auth/login").send({ email: "ana@x.com", password: "errada" })).status).toBe(401);
+     expect((await request(app).get("/tasks")).status).toBe(401);

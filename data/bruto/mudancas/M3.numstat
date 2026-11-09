@@ -1,0 +1,8 @@
+3	3	api-camadas/src/services/AuthService.ts
+17	0	api-camadas/src/utils/password.ts
+2	2	api-camadas/test/services.test.ts
+0	14	api-clean/src/infrastructure/security/BcryptHasher.ts
+28	0	api-clean/src/infrastructure/security/ScryptHasher.ts
+2	2	api-clean/src/main.ts
+19	3	api-monolito/src/server.ts
+2	3	api-monolito/test/server.test.ts

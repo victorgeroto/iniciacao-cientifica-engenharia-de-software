@@ -1,0 +1,9 @@
+8	0	api-camadas/src/repositories/TaskRepository.ts
+10	0	api-camadas/src/services/TaskService.ts
+11	0	api-clean/src/domain/policies/WipLimit.ts
+1	0	api-clean/src/domain/ports/index.ts
+3	1	api-clean/src/domain/usecases/CreateTask.ts
+2	0	api-clean/src/domain/usecases/UpdateTask.ts
+8	0	api-clean/src/infrastructure/database/PgTaskRepository.ts
+3	0	api-clean/test/usecases.test.ts
+13	0	api-monolito/src/server.ts

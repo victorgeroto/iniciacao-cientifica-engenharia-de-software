@@ -1,0 +1,12 @@
+2	0	api-camadas/src/config/database.ts
+2	0	api-camadas/src/models/Task.ts
+6	6	api-camadas/src/repositories/TaskRepository.ts
+1	0	api-camadas/src/services/TaskService.ts
+2	1	api-clean/src/domain/entities/Task.ts
+1	0	api-clean/src/domain/ports/index.ts
+1	0	api-clean/src/domain/usecases/CreateTask.ts
+6	6	api-clean/src/infrastructure/database/PgTaskRepository.ts
+2	0	api-clean/src/infrastructure/database/pool.ts
+1	0	api-clean/src/interfaces/controllers/validators.ts
+9	6	api-monolito/src/server.ts
+2	2	api-monolito/test/server.test.ts
