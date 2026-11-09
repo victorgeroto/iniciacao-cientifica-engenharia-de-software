@@ -75,7 +75,7 @@ export interface LoadTestResult {
   latencyMs: { mean: number; p50: number; p90: number; p99: number; max: number };
   errors: number;
   non2xx: number;
-  server: { p95Ms: number; meanMs: number; rssMb: number; heapUsedMb: number } | null;
+  server: { p95Ms: number; meanMs: number; rssMb: number; heapUsedMb: number; cpuMs?: number } | null;
 }
 
 export interface LoadTestRun {

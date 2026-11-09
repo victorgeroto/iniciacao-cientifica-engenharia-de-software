@@ -35,7 +35,7 @@ export interface ArchitectureResult {
   latencyMs: { mean: number; p50: number; p90: number; p99: number; max: number };
   errors: number;
   non2xx: number;
-  server: { p95Ms: number; meanMs: number; rssMb: number; heapUsedMb: number } | null;
+  server: { p95Ms: number; meanMs: number; rssMb: number; heapUsedMb: number; cpuMs: number } | null;
 }
 
 export interface LoadTestRun {
@@ -124,7 +124,9 @@ function requestsFor(scenario: Scenario, firstId: number): autocannon.Request[] 
     case "create":
       return [create];
     case "mixed":
-      return [{ method: "GET", path: "/tasks" }, { method: "GET", path: `/tasks/${firstId}` }, create];
+      // Leitura + escrita. Sem GET /tasks (a lista cresceria a cada POST) e sem PUT na mesma
+      // linha (as conexões disputariam o mesmo lock no PostgreSQL e dominariam a medição).
+      return [{ method: "GET", path: `/tasks/${firstId}` }, create];
   }
 }
 
@@ -160,6 +162,7 @@ export async function measureArchitecture(
       meanMs: snap.requests.meanMs,
       rssMb: snap.memory.rssMb,
       heapUsedMb: snap.memory.heapUsedMb,
+      cpuMs: snap.cpu.userMs + snap.cpu.systemMs,
     };
   } catch {
     server = null;
@@ -203,13 +206,13 @@ export function toCsv(run: LoadTestRun): string {
   const header = [
     "run_id", "cenario", "conexoes", "duracao_s", "rodada", "ordem", "arquitetura", "requisicoes",
     "req_por_s", "throughput_kBps", "lat_media_ms", "lat_p50_ms", "lat_p90_ms", "lat_p99_ms", "lat_max_ms",
-    "erros", "nao_2xx", "servidor_p95_ms", "servidor_media_ms", "rss_mb", "heap_mb",
+    "erros", "nao_2xx", "servidor_p95_ms", "servidor_media_ms", "rss_mb", "heap_mb", "cpu_servidor_ms",
   ];
   const rows = run.results.map((r) => [
     run.id, run.params.scenario, run.params.connections, run.params.durationSeconds, r.round, r.order,
     r.architecture, r.requests, r.requestsPerSecond, r.throughputKBps, r.latencyMs.mean, r.latencyMs.p50,
     r.latencyMs.p90, r.latencyMs.p99, r.latencyMs.max, r.errors, r.non2xx, r.server?.p95Ms ?? "",
-    r.server?.meanMs ?? "", r.server?.rssMb ?? "", r.server?.heapUsedMb ?? "",
+    r.server?.meanMs ?? "", r.server?.rssMb ?? "", r.server?.heapUsedMb ?? "", r.server?.cpuMs ?? "",
   ]);
   return [header, ...rows].map((r) => r.join(",")).join("\n") + "\n";
 }

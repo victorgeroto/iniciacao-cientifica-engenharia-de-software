@@ -21,7 +21,8 @@ x-api: &api
   build: ./backend
   image: prototipo-backend:latest
   restart: unless-stopped
-  cpus: 1.0
+  # Escala vertical: API_CPUS=0.5|1|2 docker compose up -d (padrão 1 vCPU)
+  cpus: ${API_CPUS:-1.0}
   mem_limit: 512m
 
 services:

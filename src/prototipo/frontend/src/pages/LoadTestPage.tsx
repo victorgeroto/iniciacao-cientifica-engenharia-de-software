@@ -11,7 +11,7 @@ const SCENARIOS: Record<Scenario, string> = {
   list: "Listar tarefas (GET /tasks)",
   get: "Buscar uma tarefa (GET /tasks/:id)",
   create: "Criar tarefas (POST /tasks)",
-  mixed: "Misto (listar, buscar e criar)",
+  mixed: "Misto (buscar e criar)",
 };
 
 const DEFAULTS: LoadTestParams = {
