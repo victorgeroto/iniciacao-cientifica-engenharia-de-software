@@ -13,7 +13,7 @@
 
 | Item | Situação |
 |---|---|
-| Manuscrito no template REX | ✅ Pronto para revisão — 6 páginas |
+| Manuscrito no template REX | ✅ Corrigido conforme as marcações do professor — 7 páginas |
 | Campos pessoais do bloco de autores (ORCID, CPF, e-mail) | ⬜ A preencher localmente; **não versionar** |
 | Revisão dos orientadores | ⬜ Pendente |
 | Submissão no sistema | ⬜ **Não realizada** |
@@ -33,7 +33,7 @@ A atividade recomenda PSE e admite o REX apenas com justificativa acadêmica. A 
 
 1. **Estágio da pesquisa.** O PSE exige "pesquisa completa, robusta, com [...] análise completa dos resultados" (Políticas das Modalidades, 21º CONTECSI). A pesquisa está em especificação arquitetural e planejamento experimental: o protótipo tripartido ainda não foi implementado e **não há métricas coletadas**. Um PSE exigiria apresentar resultados inexistentes, o que a atividade proíbe. Esta é a limitação concreta do estágio atual da pesquisa a que o enunciado se refere.
 2. **Elegibilidade.** O REX é restrito a graduandos e exige que o primeiro autor seja estudante e que o orientador conste como coautor. O autor cursa Análise e Desenvolvimento de Sistemas, e os dois orientadores serão coautores.
-3. **Tamanho.** O REX admite de 5 a 8 páginas; o manuscrito tem 6.
+3. **Tamanho.** O REX admite de 5 a 8 páginas; o manuscrito tem 7.
 
 A alternativa COM (Pesquisa em Andamento, 8 a 25 páginas) não está entre as opções da atividade. **A escolha do REX ainda deve ser confirmada com os orientadores**, como pede o enunciado.
 
@@ -71,7 +71,7 @@ O manuscrito foi escrito no template **"template_artigo 2024"**, indicado pela a
 | Fonte e espaçamento | Arial 12, espaço 1,5, texto justificado, primeira linha com recuo de 1,25 cm; referências, legendas e fontes em espaço simples |
 | Margens | 3 cm (superior e esquerda) e 2 cm (inferior e direita) |
 | Páginas | Sem numeração |
-| Primeira página | Título em português e em inglês, bloco de autores (nome, ORCID, CPF, instituição, e-mail), Resumo (174 palavras, limite de 250, parágrafo único), palavras-chave (5, em ordem alfabética, sem repetir termos do título), Abstract e Keywords |
+| Primeira página | Título em português e em inglês, bloco de autores (nome, ORCID, CPF, instituição, e-mail), Resumo (186 palavras, limite de 250, parágrafo único), palavras-chave (5, em ordem alfabética, sem repetir termos do título), Abstract e Keywords |
 | Estrutura | 1 Introdução (com problema e objetivo no final), 2 Metodologia, 3 Referencial teórico, 4 Resultados e discussão, 5 Considerações finais, Referências bibliográficas, nessa ordem |
 | Introdução | 1.522 caracteres (limite de 2.500) |
 | Ilustrações | Legenda acima em negrito, fonte abaixo em Arial 10; quadro em tabela nativa do Word, sem sombreado e sem linhas verticais |
@@ -156,6 +156,7 @@ As Diretrizes do 21º CONTECSI exigem que trechos produzidos com IA fiquem entre
 | [manuscrito/template_artigo_2024_comparativo_arquitetural.docx](manuscrito/template_artigo_2024_comparativo_arquitetural.docx) | Manuscrito no template, com bloco de autores (campos pessoais a preencher) |
 | [manuscrito/template_artigo_2024_comparativo_arquitetural_sem-autores.docx](manuscrito/template_artigo_2024_comparativo_arquitetural_sem-autores.docx) | Mesmo texto, sem bloco de autores |
 | [manuscrito/template_artigo_2024_comparativo_arquitetural.pdf](manuscrito/template_artigo_2024_comparativo_arquitetural.pdf) e [versão sem autores](manuscrito/template_artigo_2024_comparativo_arquitetural_sem-autores.pdf) | Exportações para revisão. **Não são a versão submetida.** |
+| [conferir-no-site-do-congresso.md](conferir-no-site-do-congresso.md) | O que já foi encontrado no site do 21º CONTECSI e o que só o autor consegue confirmar |
 | [metadados-submissao.md](metadados-submissao.md) | Dados a preencher nos 5 passos do sistema e checklist das declarações |
 | [referencias/fontes-e-trabalhos-relacionados.md](referencias/fontes-e-trabalhos-relacionados.md) | Fontes citadas, verificação e correções de metadados |
 
