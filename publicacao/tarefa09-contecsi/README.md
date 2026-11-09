@@ -13,7 +13,7 @@
 
 | Item | Situação |
 |---|---|
-| Manuscrito no template REX | ✅ Corrigido conforme as marcações do professor — 7 páginas |
+| Manuscrito no template REX | ✅ Corrigido conforme as marcações do professor — 8 páginas |
 | Campos pessoais do bloco de autores (ORCID, CPF, e-mail) | ⬜ A preencher localmente; **não versionar** |
 | Revisão dos orientadores | ⬜ Pendente |
 | Submissão no sistema | ⬜ **Não realizada** |
@@ -33,7 +33,7 @@ A atividade recomenda PSE e admite o REX apenas com justificativa acadêmica. A 
 
 1. **Estágio da pesquisa.** O PSE exige "pesquisa completa, robusta, com [...] análise completa dos resultados" (Políticas das Modalidades, 21º CONTECSI). A pesquisa está em especificação arquitetural e planejamento experimental: o protótipo tripartido ainda não foi implementado e **não há métricas coletadas**. Um PSE exigiria apresentar resultados inexistentes, o que a atividade proíbe. Esta é a limitação concreta do estágio atual da pesquisa a que o enunciado se refere.
 2. **Elegibilidade.** O REX é restrito a graduandos e exige que o primeiro autor seja estudante e que o orientador conste como coautor. O autor cursa Análise e Desenvolvimento de Sistemas, e os dois orientadores serão coautores.
-3. **Tamanho.** O REX admite de 5 a 8 páginas; o manuscrito tem 7.
+3. **Tamanho.** O REX admite de 5 a 8 páginas; o manuscrito tem 8.
 
 A alternativa COM (Pesquisa em Andamento, 8 a 25 páginas) não está entre as opções da atividade. **A escolha do REX ainda deve ser confirmada com os orientadores**, como pede o enunciado.
 
@@ -42,16 +42,16 @@ A alternativa COM (Pesquisa em Andamento, 8 a 25 páginas) não está entre as o
 ## Título
 
 **Título definitivo (a validar com os orientadores):**
-Comparativo Arquitetural: Monólito, Arquitetura em Camadas (MVC) e Clean Architecture em Sistemas Escaláveis
+Estruturação interna de aplicações monolíticas: comparação entre módulo único, arquitetura em camadas (MVC) e Clean Architecture
 
 **Title:**
-Architectural Comparison: Monolith, Layered Architecture (MVC) and Clean Architecture in Scalable Systems
+Internal structuring of monolithic applications: a comparison of single module, layered architecture (MVC) and Clean Architecture
 
 ## Contribuição científica
 
-O estudo propõe um **desenho experimental controlado** que isola o padrão arquitetural como única variável independente: a mesma aplicação de gerenciamento de tarefas, desenvolvida três vezes (Monólito, Camadas/MVC e Clean Architecture), com mesma linguagem, banco e infraestrutura AWS.
+O estudo compara **três formas de estruturar internamente uma mesma aplicação monolítica**: módulo único, arquitetura em camadas (MVC) e Clean Architecture. **Monólito descreve a implantação, comum às três**; a variável independente é a estruturação interna, e as três não são tratadas como alternativas excludentes entre si nem ao monólito (observação do professor).
 
-A literatura revisada compara majoritariamente monólito contra microsserviços e trata Camadas e Clean Architecture como boas práticas de estruturação interna, não como objetos de comparação empírica. A contribuição **consolidada até agora** é a delimitação dessa lacuna e o protocolo experimental. A contribuição **esperada**, dependente da coleta ainda não executada, são diretrizes baseadas em evidências para a escolha do padrão conforme o contexto do projeto. O manuscrito declara esse estágio e não apresenta dados de desempenho.
+A contribuição é empírica: medições de desempenho em quatro cenários, escalabilidade de carga (1 a 100 conexões) e vertical (0,5 a 2 vCPU), com 5 rodadas por condição, e indicadores de código (LOC, fan-out, cobertura da regra de negócio e dependência de frameworks). Os resultados são reportados como foram medidos, inclusive o que **não** se confirmou: o acoplamento por fan-out cresceu com as camadas e a única diferença significativa de escalabilidade não resiste à correção de Bonferroni.
 
 ---
 
@@ -71,7 +71,7 @@ O manuscrito foi escrito no template **"template_artigo 2024"**, indicado pela a
 | Fonte e espaçamento | Arial 12, espaço 1,5, texto justificado, primeira linha com recuo de 1,25 cm; referências, legendas e fontes em espaço simples |
 | Margens | 3 cm (superior e esquerda) e 2 cm (inferior e direita) |
 | Páginas | Sem numeração |
-| Primeira página | Título em português e em inglês, bloco de autores (nome, ORCID, CPF, instituição, e-mail), Resumo (186 palavras, limite de 250, parágrafo único), palavras-chave (5, em ordem alfabética, sem repetir termos do título), Abstract e Keywords |
+| Primeira página | Título em português e em inglês, bloco de autores (nome, ORCID, CPF, instituição, e-mail), Resumo (211 palavras, limite de 250, parágrafo único), palavras-chave (5, em ordem alfabética, sem repetir termos do título), Abstract e Keywords |
 | Estrutura | 1 Introdução (com problema e objetivo no final), 2 Metodologia, 3 Referencial teórico, 4 Resultados e discussão, 5 Considerações finais, Referências bibliográficas, nessa ordem |
 | Introdução | 1.522 caracteres (limite de 2.500) |
 | Ilustrações | Legenda acima em negrito, fonte abaixo em Arial 10; quadro em tabela nativa do Word, sem sombreado e sem linhas verticais |

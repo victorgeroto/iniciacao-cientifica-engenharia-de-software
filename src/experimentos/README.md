@@ -9,10 +9,10 @@ As três versões do protótipo são **implantadas como monólito**: cada uma é
 | Versão | Organização interna | Referência |
 |---|---|---|
 | A — Módulo único | *Transaction Script*: rotas, regras, SQL e autenticação em um só módulo | Fowler (2002) |
-| B — Camadas | controller → service → repository; cada camada depende da camada inferior | Fowler (2002); Richards (2015) |
+| B — Camadas (MVC) | controller → service → repository; cada camada depende da camada inferior | Fowler (2002); Richards (2015) |
 | C — Clean Architecture | domínio isolado (entidades, casos de uso, portas); a infraestrutura depende do domínio | Martin (2017) |
 
-Por isso a comparação não opõe "monólito × MVC × Clean". Monólito descreve a forma de implantação e é comum às três versões. MVC é um padrão de apresentação, sem aplicação a uma API REST sem *views*.
+Por isso a comparação não opõe "monólito × MVC × Clean". Monólito descreve a forma de implantação e é comum às três versões; arquitetura em camadas (MVC) e Clean Architecture são formas de estruturação interna, e uma aplicação monolítica pode adotar qualquer uma delas, ou nenhuma (módulo único).
 
 ## Questões de pesquisa
 

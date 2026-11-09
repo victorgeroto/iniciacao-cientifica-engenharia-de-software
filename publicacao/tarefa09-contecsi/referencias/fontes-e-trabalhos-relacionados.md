@@ -21,13 +21,13 @@ Fontes citadas no manuscrito [`template_artigo_2024_comparativo_arquitetural.doc
 ## Referências do manuscrito (ABNT)
 
 - ABGAZ, Y. *et al.* Decomposition of monolith applications into microservices architectures: a systematic review. **IEEE Transactions on Software Engineering**, v. 49, n. 8, p. 4213-4242, 2023. DOI: 10.1109/TSE.2023.3287297.
-- AMAZON WEB SERVICES. **AWS Well-Architected Framework**. [S. l.]: AWS, 2023. Disponível em: https://aws.amazon.com/architecture/well-architected/. Acesso em: 20 maio 2026.
 - BASS, L.; CLEMENTS, P.; KAZMAN, R. **Software architecture in practice**. 3. ed. Boston: Addison-Wesley, 2012.
 - BLINOWSKI, G.; OJDOWSKA, A.; PRZYBYŁEK, A. Monolithic vs. microservice architecture: a performance and scalability evaluation. **IEEE Access**, v. 10, p. 20357-20374, 2022. DOI: 10.1109/ACCESS.2022.3152803.
 - DI FRANCESCO, P.; LAGO, P.; MALAVOLTA, I. Architecting with microservices: a systematic mapping study. **Journal of Systems and Software**, v. 150, p. 77-97, 2019. DOI: 10.1016/j.jss.2019.01.001.
 - DRAGONI, N. *et al.* Microservices: yesterday, today, and tomorrow. *In*: MAZZARA, M.; MEYER, B. (ed.). **Present and ulterior software engineering**. Cham: Springer, 2017. p. 195-216.
 - FOWLER, M. **Patterns of enterprise application architecture**. Boston: Addison-Wesley, 2002.
 - GARLAN, D.; SHAW, M. An introduction to software architecture. *In*: AMBRIOLA, V.; TORTORA, G. (ed.). **Advances in software engineering and knowledge engineering**. Singapore: World Scientific Publishing, 1993. p. 1-39.
+- KRUSKAL, W. H.; WALLIS, W. A. Use of ranks in one-criterion variance analysis. **Journal of the American Statistical Association**, v. 47, n. 260, p. 583-621, 1952. DOI: 10.1080/01621459.1952.10483441.
 - MARTIN, R. C. **Clean architecture**: a craftsman's guide to software structure and design. Upper Saddle River: Prentice Hall, 2017.
 - NEWMAN, S. **Building microservices**: designing fine-grained systems. Sebastopol: O'Reilly Media, 2015.
 - RICHARDS, M. **Software architecture patterns**. Sebastopol: O'Reilly Media, 2015.
