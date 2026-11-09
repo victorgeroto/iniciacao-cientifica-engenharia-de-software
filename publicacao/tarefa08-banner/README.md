@@ -13,7 +13,6 @@
 |---|---|
 | [banner-v1.pdf](banner-v1.pdf) | Banner em PDF, A0 retrato (84,1 × 118,9 cm), uma página |
 | [banner-v1.pptx](banner-v1.pptx) | Arquivo editável. Os gráficos e a tabela são **nativos** (clique com o botão direito → *Editar dados*) |
-| [gerar_banner.py](gerar_banner.py) | Gera o `.pptx` a partir dos dados da pesquisa, para o banner nunca divergir do artigo |
 
 ## Template
 
@@ -57,11 +56,3 @@ A página do evento ([Even3](https://www.even3.com.br/iiicongressounisenai-sp-72
 - [ ] **Agradecimentos e apoio financeiro:** hoje só agradece aos orientadores e à instituição. Se houver bolsa ou apoio, os orientadores devem confirmar a redação.
 - [ ] **Não imprimir** antes de confirmar tamanho e regras.
 - [ ] Se os orientadores aprovarem o novo título, avisar a organização para que o título publicado no evento corresponda ao do banner.
-
-## Como regenerar
-
-```bash
-python publicacao/tarefa08-banner/gerar_banner.py
-```
-
-Requer `python-pptx` e o PowerPoint (para medir as caixas de texto e exportar o PDF). Os gráficos leem `data/tratado/`, gerado por `src/experimentos/analisar_resultados.py`.
