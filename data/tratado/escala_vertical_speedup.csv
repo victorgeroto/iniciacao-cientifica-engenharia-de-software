@@ -1,0 +1,10 @@
+arquitetura,vcpu,throughput_rps,speedup_vs_1vcpu,eficiencia_de_escala
+monolito,0.5,244.6,0.322,0.643
+monolito,1.0,760.4,1.0,1.0
+monolito,2.0,877.6,1.154,0.577
+camadas,0.5,219.8,0.322,0.643
+camadas,1.0,683.3,1.0,1.0
+camadas,2.0,895.1,1.31,0.655
+clean,0.5,223.3,0.317,0.633
+clean,1.0,705.6,1.0,1.0
+clean,2.0,876.6,1.242,0.621

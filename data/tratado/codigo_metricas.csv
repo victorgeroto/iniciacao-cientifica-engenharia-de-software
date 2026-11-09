@@ -1,0 +1,4 @@
+arquitetura,arquivos,loc,fanout_medio,fanout_max,dep_entre_camadas,loc_teste,cobertura_total,cobertura_por_camada
+monolito,1,205,0,0,0,73,78.33,"{""raiz"": 78.33}"
+camadas,16,356,1.63,4,23,95,41.86,"{""raiz"": 0, ""config"": 42.86, ""controllers"": 0, ""middlewares"": 0, ""models"": 100, ""repositories"": 28.3, ""routes"": 0, ""services"": 95.89}"
+clean,29,565,2.76,17,43,117,38.25,"{""raiz"": 0, ""domain"": 94.21, ""infrastructure"": 0, ""interfaces"": 66.1}"

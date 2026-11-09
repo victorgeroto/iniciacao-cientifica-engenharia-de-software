@@ -1,0 +1,10 @@
+mudanca,arquitetura,arquivos_codigo,arquivos_teste,linhas_alteradas,camadas_tocadas,lista_camadas
+M1,monolito,1,1,15,1,raiz
+M1,camadas,4,0,17,4,config models repositories services
+M1,clean,6,0,20,3,domain infrastructure interfaces
+M2,monolito,1,0,13,1,raiz
+M2,camadas,2,0,18,2,repositories services
+M2,clean,5,1,26,2,domain infrastructure
+M3,monolito,1,1,22,1,raiz
+M3,camadas,2,1,23,2,services utils
+M3,clean,3,0,46,2,infrastructure raiz

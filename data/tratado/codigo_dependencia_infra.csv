@@ -1,0 +1,4 @@
+projeto,camada_negocio,arquivos,arquivos_com_infra,pct_com_infra,pacotes_infra
+api-monolito,(arquivo único),1,1,100.0,bcryptjs express jsonwebtoken pg
+api-camadas,services,2,1,50.0,bcryptjs jsonwebtoken
+api-clean,domain,14,0,0.0,

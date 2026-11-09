@@ -1,0 +1,388 @@
+{
+  "id": "20261109002717",
+  "status": "done",
+  "startedAt": "2026-11-09T00:27:17.235Z",
+  "params": {
+    "scenario": "list",
+    "connections": 10,
+    "durationSeconds": 10,
+    "warmupSeconds": 3,
+    "rounds": 5,
+    "seedTasks": 20,
+    "architectures": [
+      "monolito",
+      "camadas",
+      "clean"
+    ]
+  },
+  "progress": {
+    "completed": 15,
+    "total": 15
+  },
+  "results": [
+    {
+      "architecture": "monolito",
+      "round": 1,
+      "order": 1,
+      "requests": 9210,
+      "requestsPerSecond": 837.28,
+      "throughputKBps": 2917.18,
+      "latencyMs": {
+        "mean": 11.43,
+        "p50": 9,
+        "p90": 18,
+        "p99": 47,
+        "max": 207
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 11.033,
+        "meanMs": 4.48,
+        "rssMb": 83.06,
+        "heapUsedMb": 19.06,
+        "cpuMs": 11046
+      }
+    },
+    {
+      "architecture": "camadas",
+      "round": 1,
+      "order": 2,
+      "requests": 9336,
+      "requestsPerSecond": 933.6,
+      "throughputKBps": 3252.7,
+      "latencyMs": {
+        "mean": 10.21,
+        "p50": 9,
+        "p90": 15,
+        "p99": 41,
+        "max": 88
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 9.282,
+        "meanMs": 4.018,
+        "rssMb": 82.69,
+        "heapUsedMb": 19.5,
+        "cpuMs": 10003
+      }
+    },
+    {
+      "architecture": "clean",
+      "round": 1,
+      "order": 3,
+      "requests": 10762,
+      "requestsPerSecond": 978.37,
+      "throughputKBps": 3408.82,
+      "latencyMs": {
+        "mean": 9.71,
+        "p50": 8,
+        "p90": 14,
+        "p99": 37,
+        "max": 169
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 8.559,
+        "meanMs": 3.957,
+        "rssMb": 82.45,
+        "heapUsedMb": 18.78,
+        "cpuMs": 10987
+      }
+    },
+    {
+      "architecture": "camadas",
+      "round": 2,
+      "order": 1,
+      "requests": 12813,
+      "requestsPerSecond": 1164.82,
+      "throughputKBps": 4068.64,
+      "latencyMs": {
+        "mean": 8.08,
+        "p50": 7,
+        "p90": 11,
+        "p99": 27,
+        "max": 58
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 7.145,
+        "meanMs": 3.288,
+        "rssMb": 82.41,
+        "heapUsedMb": 12.17,
+        "cpuMs": 11007
+      }
+    },
+    {
+      "architecture": "clean",
+      "round": 2,
+      "order": 2,
+      "requests": 11489,
+      "requestsPerSecond": 1148.91,
+      "throughputKBps": 4013.2,
+      "latencyMs": {
+        "mean": 8.2,
+        "p50": 7,
+        "p90": 12,
+        "p99": 28,
+        "max": 53
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 7.304,
+        "meanMs": 3.335,
+        "rssMb": 82.71,
+        "heapUsedMb": 15.36,
+        "cpuMs": 9996
+      }
+    },
+    {
+      "architecture": "monolito",
+      "round": 2,
+      "order": 3,
+      "requests": 11453,
+      "requestsPerSecond": 1145.3,
+      "throughputKBps": 4000.9,
+      "latencyMs": {
+        "mean": 8.22,
+        "p50": 7,
+        "p90": 12,
+        "p99": 26,
+        "max": 77
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 7.391,
+        "meanMs": 3.317,
+        "rssMb": 83.21,
+        "heapUsedMb": 19.74,
+        "cpuMs": 10009
+      }
+    },
+    {
+      "architecture": "clean",
+      "round": 3,
+      "order": 1,
+      "requests": 11452,
+      "requestsPerSecond": 1145.2,
+      "throughputKBps": 4000.7,
+      "latencyMs": {
+        "mean": 8.23,
+        "p50": 7,
+        "p90": 12,
+        "p99": 26,
+        "max": 45
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 7.321,
+        "meanMs": 3.353,
+        "rssMb": 83.19,
+        "heapUsedMb": 20.07,
+        "cpuMs": 10026
+      }
+    },
+    {
+      "architecture": "monolito",
+      "round": 3,
+      "order": 2,
+      "requests": 11601,
+      "requestsPerSecond": 1160.1,
+      "throughputKBps": 4052.4,
+      "latencyMs": {
+        "mean": 8.12,
+        "p50": 7,
+        "p90": 12,
+        "p99": 23,
+        "max": 47
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 7.307,
+        "meanMs": 3.305,
+        "rssMb": 83.64,
+        "heapUsedMb": 18.12,
+        "cpuMs": 10015
+      }
+    },
+    {
+      "architecture": "camadas",
+      "round": 3,
+      "order": 3,
+      "requests": 11559,
+      "requestsPerSecond": 1155.91,
+      "throughputKBps": 4038,
+      "latencyMs": {
+        "mean": 8.15,
+        "p50": 7,
+        "p90": 12,
+        "p99": 27,
+        "max": 55
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 7.28,
+        "meanMs": 3.331,
+        "rssMb": 82.95,
+        "heapUsedMb": 15.66,
+        "cpuMs": 10015
+      }
+    },
+    {
+      "architecture": "monolito",
+      "round": 4,
+      "order": 1,
+      "requests": 11231,
+      "requestsPerSecond": 1123.1,
+      "throughputKBps": 3923.2,
+      "latencyMs": {
+        "mean": 8.39,
+        "p50": 8,
+        "p90": 12,
+        "p99": 26,
+        "max": 58
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 7.57,
+        "meanMs": 3.389,
+        "rssMb": 83.48,
+        "heapUsedMb": 13.09,
+        "cpuMs": 10007
+      }
+    },
+    {
+      "architecture": "camadas",
+      "round": 4,
+      "order": 2,
+      "requests": 11821,
+      "requestsPerSecond": 1074.64,
+      "throughputKBps": 3753.73,
+      "latencyMs": {
+        "mean": 8.81,
+        "p50": 8,
+        "p90": 13,
+        "p99": 25,
+        "max": 44
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 7.867,
+        "meanMs": 3.518,
+        "rssMb": 83.02,
+        "heapUsedMb": 19.13,
+        "cpuMs": 11008
+      }
+    },
+    {
+      "architecture": "clean",
+      "round": 4,
+      "order": 3,
+      "requests": 9745,
+      "requestsPerSecond": 974.5,
+      "throughputKBps": 3403.9,
+      "latencyMs": {
+        "mean": 9.76,
+        "p50": 9,
+        "p90": 15,
+        "p99": 30,
+        "max": 55
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 9.133,
+        "meanMs": 3.856,
+        "rssMb": 83.52,
+        "heapUsedMb": 16.96,
+        "cpuMs": 10017
+      }
+    },
+    {
+      "architecture": "camadas",
+      "round": 5,
+      "order": 1,
+      "requests": 10005,
+      "requestsPerSecond": 1000.5,
+      "throughputKBps": 3495.7,
+      "latencyMs": {
+        "mean": 9.49,
+        "p50": 8,
+        "p90": 15,
+        "p99": 32,
+        "max": 58
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 8.919,
+        "meanMs": 3.763,
+        "rssMb": 83.05,
+        "heapUsedMb": 16.41,
+        "cpuMs": 10002
+      }
+    },
+    {
+      "architecture": "clean",
+      "round": 5,
+      "order": 2,
+      "requests": 11978,
+      "requestsPerSecond": 1088.91,
+      "throughputKBps": 3805.27,
+      "latencyMs": {
+        "mean": 8.68,
+        "p50": 8,
+        "p90": 12,
+        "p99": 27,
+        "max": 70
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 7.75,
+        "meanMs": 3.446,
+        "rssMb": 83.45,
+        "heapUsedMb": 13.48,
+        "cpuMs": 10991
+      }
+    },
+    {
+      "architecture": "monolito",
+      "round": 5,
+      "order": 3,
+      "requests": 13013,
+      "requestsPerSecond": 1183,
+      "throughputKBps": 4133.82,
+      "latencyMs": {
+        "mean": 7.95,
+        "p50": 7,
+        "p90": 11,
+        "p99": 26,
+        "max": 54
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 7.099,
+        "meanMs": 3.174,
+        "rssMb": 83.5,
+        "heapUsedMb": 19.49,
+        "cpuMs": 11013
+      }
+    }
+  ],
+  "finishedAt": "2026-11-09T00:30:52.633Z",
+  "fase": "cenarios",
+  "condicao": "list",
+  "apiCpus": 1.0
+}

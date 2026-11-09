@@ -1,0 +1,388 @@
+{
+  "id": "20261109014631",
+  "status": "done",
+  "startedAt": "2026-11-09T01:46:31.425Z",
+  "params": {
+    "scenario": "list",
+    "connections": 25,
+    "durationSeconds": 10,
+    "warmupSeconds": 3,
+    "rounds": 5,
+    "seedTasks": 20,
+    "architectures": [
+      "monolito",
+      "camadas",
+      "clean"
+    ]
+  },
+  "progress": {
+    "completed": 15,
+    "total": 15
+  },
+  "results": [
+    {
+      "architecture": "monolito",
+      "round": 1,
+      "order": 1,
+      "requests": 6693,
+      "requestsPerSecond": 669.3,
+      "throughputKBps": 2390.1,
+      "latencyMs": {
+        "mean": 36.81,
+        "p50": 30,
+        "p90": 53,
+        "p99": 187,
+        "max": 465
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 33.31,
+        "meanMs": 15.429,
+        "rssMb": 83.23,
+        "heapUsedMb": 15.54,
+        "cpuMs": 10004
+      }
+    },
+    {
+      "architecture": "camadas",
+      "round": 1,
+      "order": 2,
+      "requests": 5910,
+      "requestsPerSecond": 591,
+      "throughputKBps": 2110.9,
+      "latencyMs": {
+        "mean": 41.67,
+        "p50": 33,
+        "p90": 63,
+        "p99": 224,
+        "max": 584
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 38.939,
+        "meanMs": 17.957,
+        "rssMb": 83.25,
+        "heapUsedMb": 13.08,
+        "cpuMs": 10052
+      }
+    },
+    {
+      "architecture": "clean",
+      "round": 1,
+      "order": 3,
+      "requests": 6098,
+      "requestsPerSecond": 609.8,
+      "throughputKBps": 2178.03,
+      "latencyMs": {
+        "mean": 40.42,
+        "p50": 33,
+        "p90": 59,
+        "p99": 238,
+        "max": 384
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 37.37,
+        "meanMs": 16.847,
+        "rssMb": 83.36,
+        "heapUsedMb": 12.27,
+        "cpuMs": 10055
+      }
+    },
+    {
+      "architecture": "camadas",
+      "round": 2,
+      "order": 1,
+      "requests": 7606,
+      "requestsPerSecond": 760.6,
+      "throughputKBps": 2716.6,
+      "latencyMs": {
+        "mean": 32.33,
+        "p50": 29,
+        "p90": 47,
+        "p99": 73,
+        "max": 166
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 26.45,
+        "meanMs": 13.966,
+        "rssMb": 83.5,
+        "heapUsedMb": 12.92,
+        "cpuMs": 10010
+      }
+    },
+    {
+      "architecture": "clean",
+      "round": 2,
+      "order": 2,
+      "requests": 6396,
+      "requestsPerSecond": 639.6,
+      "throughputKBps": 2284.35,
+      "latencyMs": {
+        "mean": 38.49,
+        "p50": 35,
+        "p90": 56,
+        "p99": 98,
+        "max": 290
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 30.82,
+        "meanMs": 15.815,
+        "rssMb": 83.36,
+        "heapUsedMb": 14.68,
+        "cpuMs": 10028
+      }
+    },
+    {
+      "architecture": "monolito",
+      "round": 2,
+      "order": 3,
+      "requests": 7980,
+      "requestsPerSecond": 798,
+      "throughputKBps": 2849.8,
+      "latencyMs": {
+        "mean": 30.8,
+        "p50": 27,
+        "p90": 44,
+        "p99": 87,
+        "max": 191
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 25.294,
+        "meanMs": 13.288,
+        "rssMb": 82.9,
+        "heapUsedMb": 14.41,
+        "cpuMs": 10022
+      }
+    },
+    {
+      "architecture": "clean",
+      "round": 3,
+      "order": 1,
+      "requests": 7613,
+      "requestsPerSecond": 761.3,
+      "throughputKBps": 2718.6,
+      "latencyMs": {
+        "mean": 32.3,
+        "p50": 30,
+        "p90": 46,
+        "p99": 64,
+        "max": 83
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 26.212,
+        "meanMs": 13.621,
+        "rssMb": 83.35,
+        "heapUsedMb": 14.93,
+        "cpuMs": 10013
+      }
+    },
+    {
+      "architecture": "monolito",
+      "round": 3,
+      "order": 2,
+      "requests": 7744,
+      "requestsPerSecond": 774.4,
+      "throughputKBps": 2765.45,
+      "latencyMs": {
+        "mean": 31.75,
+        "p50": 28,
+        "p90": 51,
+        "p99": 75,
+        "max": 92
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 28.256,
+        "meanMs": 13.569,
+        "rssMb": 82.81,
+        "heapUsedMb": 13.65,
+        "cpuMs": 10029
+      }
+    },
+    {
+      "architecture": "camadas",
+      "round": 3,
+      "order": 3,
+      "requests": 4732,
+      "requestsPerSecond": 473.2,
+      "throughputKBps": 1690.08,
+      "latencyMs": {
+        "mean": 52.22,
+        "p50": 46,
+        "p90": 80,
+        "p99": 161,
+        "max": 188
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 47.201,
+        "meanMs": 22.361,
+        "rssMb": 83.5,
+        "heapUsedMb": 16.54,
+        "cpuMs": 10042
+      }
+    },
+    {
+      "architecture": "monolito",
+      "round": 4,
+      "order": 1,
+      "requests": 7193,
+      "requestsPerSecond": 719.3,
+      "throughputKBps": 2569.25,
+      "latencyMs": {
+        "mean": 34.23,
+        "p50": 31,
+        "p90": 52,
+        "p99": 86,
+        "max": 257
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 29.809,
+        "meanMs": 14.586,
+        "rssMb": 83.32,
+        "heapUsedMb": 17.38,
+        "cpuMs": 10030
+      }
+    },
+    {
+      "architecture": "camadas",
+      "round": 4,
+      "order": 2,
+      "requests": 8083,
+      "requestsPerSecond": 808.3,
+      "throughputKBps": 2886.6,
+      "latencyMs": {
+        "mean": 30.41,
+        "p50": 26,
+        "p90": 45,
+        "p99": 79,
+        "max": 114
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 25.463,
+        "meanMs": 13.179,
+        "rssMb": 83.5,
+        "heapUsedMb": 17.49,
+        "cpuMs": 10016
+      }
+    },
+    {
+      "architecture": "clean",
+      "round": 4,
+      "order": 3,
+      "requests": 8600,
+      "requestsPerSecond": 781.82,
+      "throughputKBps": 2792.45,
+      "latencyMs": {
+        "mean": 31.43,
+        "p50": 28,
+        "p90": 43,
+        "p99": 75,
+        "max": 161
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 24.635,
+        "meanMs": 13.136,
+        "rssMb": 83.6,
+        "heapUsedMb": 15.07,
+        "cpuMs": 11020
+      }
+    },
+    {
+      "architecture": "camadas",
+      "round": 5,
+      "order": 1,
+      "requests": 7833,
+      "requestsPerSecond": 783.3,
+      "throughputKBps": 2797.4,
+      "latencyMs": {
+        "mean": 31.39,
+        "p50": 29,
+        "p90": 45,
+        "p99": 66,
+        "max": 84
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 24.076,
+        "meanMs": 13.55,
+        "rssMb": 83.51,
+        "heapUsedMb": 14.37,
+        "cpuMs": 10039
+      }
+    },
+    {
+      "architecture": "clean",
+      "round": 5,
+      "order": 2,
+      "requests": 7354,
+      "requestsPerSecond": 735.4,
+      "throughputKBps": 2626.4,
+      "latencyMs": {
+        "mean": 33.46,
+        "p50": 30,
+        "p90": 47,
+        "p99": 80,
+        "max": 134
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 26.445,
+        "meanMs": 14.089,
+        "rssMb": 83.53,
+        "heapUsedMb": 17.21,
+        "cpuMs": 10020
+      }
+    },
+    {
+      "architecture": "monolito",
+      "round": 5,
+      "order": 3,
+      "requests": 8408,
+      "requestsPerSecond": 840.8,
+      "throughputKBps": 3002.8,
+      "latencyMs": {
+        "mean": 29.21,
+        "p50": 26,
+        "p90": 42,
+        "p99": 63,
+        "max": 81
+      },
+      "errors": 0,
+      "non2xx": 0,
+      "server": {
+        "p95Ms": 23.732,
+        "meanMs": 12.679,
+        "rssMb": 83.61,
+        "heapUsedMb": 15.73,
+        "cpuMs": 10033
+      }
+    }
+  ],
+  "finishedAt": "2026-11-09T01:49:57.243Z",
+  "fase": "vertical",
+  "condicao": "cpu1.0",
+  "apiCpus": 1.0
+}
