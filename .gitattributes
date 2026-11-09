@@ -1,0 +1,3 @@
+# Patches e diffs precisam permanecer byte a byte iguais para serem reaplicados (git apply).
+*.patch -text
+*.numstat -text
