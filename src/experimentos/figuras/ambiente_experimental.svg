@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="760" viewBox="0 0 1600 760" font-family="sans-serif">
+  <defs>
+    <marker id="seta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#334155"/>
+    </marker>
+  </defs>
+  <rect width="1600" height="760" fill="#ffffff"/>
+
+  <!-- hospedeiro -->
+  <rect x="20" y="20" width="1560" height="720" rx="18" fill="#f8fafc" stroke="#64748b" stroke-width="2" stroke-dasharray="10 6"/>
+  <text x="44" y="58" font-size="26" font-weight="bold" fill="#0f172a">Hospedeiro único · Docker Compose</text>
+  <text x="44" y="88" font-size="20" fill="#475569">mesma imagem Node 22 para as três APIs · limites de CPU e memória idênticos</text>
+
+  <!-- gerador de carga -->
+  <rect x="60" y="260" width="330" height="230" rx="14" fill="#ffffff" stroke="#0f172a" stroke-width="2.5"/>
+  <text x="225" y="305" font-size="24" font-weight="bold" text-anchor="middle" fill="#0f172a">Serviço de benchmark</text>
+  <text x="225" y="342" font-size="20" text-anchor="middle" fill="#334155">gerador de carga (autocannon)</text>
+  <text x="225" y="372" font-size="20" text-anchor="middle" fill="#334155">aquecimento · 5 rodadas</text>
+  <text x="225" y="402" font-size="20" text-anchor="middle" fill="#334155">ordem rotacionada</text>
+  <text x="225" y="432" font-size="20" text-anchor="middle" fill="#334155">métricas estáticas do código</text>
+  <text x="225" y="462" font-size="20" text-anchor="middle" fill="#334155">resultados em JSON</text>
+
+  <!-- APIs -->
+  <g>
+    <rect x="560" y="130" width="420" height="140" rx="14" fill="#e0f2fe" stroke="#0284c7" stroke-width="2.5"/>
+    <text x="770" y="175" font-size="24" font-weight="bold" text-anchor="middle" fill="#0c4a6e">A · Módulo único</text>
+    <text x="770" y="208" font-size="19" text-anchor="middle" fill="#0c4a6e">Transaction Script em um arquivo</text>
+    <text x="770" y="240" font-size="18" text-anchor="middle" fill="#075985">:3001 · 1 vCPU · 512 MB</text>
+
+    <rect x="560" y="305" width="420" height="140" rx="14" fill="#fef3c7" stroke="#d97706" stroke-width="2.5"/>
+    <text x="770" y="350" font-size="24" font-weight="bold" text-anchor="middle" fill="#78350f">B · Camadas</text>
+    <text x="770" y="383" font-size="19" text-anchor="middle" fill="#78350f">controller → service → repository</text>
+    <text x="770" y="415" font-size="18" text-anchor="middle" fill="#92400e">:3002 · 1 vCPU · 512 MB</text>
+
+    <rect x="560" y="480" width="420" height="140" rx="14" fill="#ede9fe" stroke="#7c3aed" stroke-width="2.5"/>
+    <text x="770" y="525" font-size="24" font-weight="bold" text-anchor="middle" fill="#4c1d95">C · Clean Architecture</text>
+    <text x="770" y="558" font-size="19" text-anchor="middle" fill="#4c1d95">domínio ← adaptadores ← infraestrutura</text>
+    <text x="770" y="590" font-size="18" text-anchor="middle" fill="#5b21b6">:3003 · 1 vCPU · 512 MB</text>
+  </g>
+
+  <!-- bancos -->
+  <g font-size="20" text-anchor="middle" fill="#0f172a">
+    <ellipse cx="1240" cy="168" rx="150" ry="22" fill="#ffffff" stroke="#334155" stroke-width="2.5"/>
+    <path d="M1090,168 v64 a150,22 0 0 0 300,0 v-64" fill="#ffffff" stroke="#334155" stroke-width="2.5"/>
+    <text x="1240" y="225">PostgreSQL 16 · banco A</text>
+
+    <ellipse cx="1240" cy="343" rx="150" ry="22" fill="#ffffff" stroke="#334155" stroke-width="2.5"/>
+    <path d="M1090,343 v64 a150,22 0 0 0 300,0 v-64" fill="#ffffff" stroke="#334155" stroke-width="2.5"/>
+    <text x="1240" y="400">PostgreSQL 16 · banco B</text>
+
+    <ellipse cx="1240" cy="518" rx="150" ry="22" fill="#ffffff" stroke="#334155" stroke-width="2.5"/>
+    <path d="M1090,518 v64 a150,22 0 0 0 300,0 v-64" fill="#ffffff" stroke="#334155" stroke-width="2.5"/>
+    <text x="1240" y="575">PostgreSQL 16 · banco C</text>
+  </g>
+
+  <!-- setas: carga -->
+  <g stroke="#334155" stroke-width="2.5" fill="none">
+    <path d="M390,330 C470,330 480,200 556,200"/>
+    <path d="M390,375 L556,375"/>
+    <path d="M390,420 C470,420 480,550 556,550"/>
+    <path d="M980,200 L1086,200"/>
+    <path d="M980,375 L1086,375"/>
+    <path d="M980,550 L1086,550"/>
+  </g>
+  <text x="472" y="362" font-size="18" fill="#334155" text-anchor="middle">mesma carga</text>
+
+  <!-- métricas do servidor -->
+  <path d="M770,620 L770,690 L225,690 L225,494" stroke="#64748b" stroke-width="2" fill="none" stroke-dasharray="8 6"/>
+  <text x="500" y="680" font-size="18" fill="#475569" text-anchor="middle">GET /metrics: latência interna, CPU, memória</text>
+  <text x="1240" y="660" font-size="18" fill="#475569" text-anchor="middle">1 vCPU · 512 MB por banco</text>
+<polygon points="556,200 540.0,208.0 540.0,192.0" fill="#334155"/><polygon points="556,375 540.0,383.0 540.0,367.0" fill="#334155"/><polygon points="556,550 540.0,558.0 540.0,542.0" fill="#334155"/><polygon points="1086,200 1070.0,208.0 1070.0,192.0" fill="#334155"/><polygon points="1086,375 1070.0,383.0 1070.0,367.0" fill="#334155"/><polygon points="1086,550 1070.0,558.0 1070.0,542.0" fill="#334155"/><polygon points="225,494 233.0,510.0 217.0,510.0" fill="#64748b"/>
+</svg>
